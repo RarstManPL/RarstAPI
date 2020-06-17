@@ -54,4 +54,9 @@ public class RarstAPI extends JavaPlugin implements RarstAPIProvider {
     public Logger getProviderLogger() {
         return this.logger;
     }
+
+    @Override
+    public JavaPlugin getProviderJavaPlugin() {
+        return this;
+    }
 }
