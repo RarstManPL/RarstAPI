@@ -24,14 +24,14 @@ public class VaultHook extends PluginHook {
         final RegisteredServiceProvider<Permission> permissionProvider = rarstAPIProvider.getProviderServer().getServicesManager().getRegistration(Permission.class);
 
         if (permissionProvider == null) {
-            rarstAPIProvider.getProviderLogger().error("Cannot hook into Vault's Permission Provider");
+            rarstAPIProvider.getProviderLogger().error("Cannot hook into Vault's Permission Provider.");
             return this;
         }
         this.permissionProvider = permissionProvider.getProvider();
         final RegisteredServiceProvider<Economy> economyProvider = rarstAPIProvider.getProviderServer().getServicesManager().getRegistration(Economy.class);
 
         if(economyProvider == null){
-            rarstAPIProvider.getProviderLogger().error("Cannot hook into Vault's Economy Provider");
+            rarstAPIProvider.getProviderLogger().error("Cannot hook into Vault's Economy Provider.");
             return this;
         }
         this.economyProvider = economyProvider.getProvider();
