@@ -3,8 +3,6 @@ package me.rarstman.rarstapi.hook.impl;
 import me.rarstman.rarstapi.RarstAPI;
 import me.rarstman.rarstapi.RarstAPIProvider;
 import me.rarstman.rarstapi.hook.PluginHook;
-import me.rarstman.rarstapi.inventory.Inventory;
-import me.rarstman.rarstapi.inventory.impl.anvil.AnvilInventory;
 import me.rarstman.rarstapi.message.Message;
 import me.rarstman.rarstapi.message.impl.ChatMessage;
 import net.milkbowl.vault.economy.Economy;
