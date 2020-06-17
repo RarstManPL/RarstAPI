@@ -1,8 +1,5 @@
 package me.rarstman.rarstapi;
 
-import me.rarstman.rarstapi.database.Database;
-import me.rarstman.rarstapi.hook.HooksMap;
-import me.rarstman.rarstapi.hook.impl.VaultHook;
 import me.rarstman.rarstapi.logger.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -14,9 +11,6 @@ public class RarstAPI extends JavaPlugin implements RarstAPIProvider {
     private RarstAPIProvider rarstAPIProvider;
     private Logger logger;
 
-    private Database database;
-    private HooksMap hooksMap = new HooksMap();
-
     public RarstAPI(){
         rarstAPI = this;
     }
@@ -27,13 +21,6 @@ public class RarstAPI extends JavaPlugin implements RarstAPIProvider {
         this.rarstAPIProvider = this;
 
         this.logger = new Logger(java.util.logging.Logger.getLogger("RarstAPI"));
-
-        this.initialize();
-    }
-
-    public RarstAPI initialize(){
-        this.hooksMap.registerHook(new VaultHook().initialize());
-        return this;
     }
 
     public void setRarstAPIProvider(final RarstAPIProvider rarstAPIProvider){
@@ -46,10 +33,6 @@ public class RarstAPI extends JavaPlugin implements RarstAPIProvider {
 
     public static RarstAPI getAPI() {
         return rarstAPI;
-    }
-
-    public HooksMap getHooksMap() {
-        return this.hooksMap;
     }
 
     @Override

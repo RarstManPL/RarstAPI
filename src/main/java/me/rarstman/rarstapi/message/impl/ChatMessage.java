@@ -1,7 +1,7 @@
 package me.rarstman.rarstapi.message.impl;
 
 import me.rarstman.rarstapi.message.Message;
-import me.rarstman.rarstapi.util.PermissionUtil;
+import me.rarstman.rarstapi.util.StringUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -12,32 +12,16 @@ public class ChatMessage extends Message {
     }
 
     public ChatMessage(final Message message){
-        this(message.getMessage());
+        super(message);
     }
 
     @Override
-    public void send(final CommandSender commandSender) {
-        commandSender.sendMessage(this.message);
+    public void send(final Player player, final String... replaces) {
+        player.sendMessage(StringUtil.replace(this.message, replaces));
     }
 
     @Override
-    public void send(final Player player) {
-        player.sendMessage(this.message);
+    public void send(final CommandSender commandSender, final String... replaces) {
+        commandSender.sendMessage(StringUtil.replace(this.message, replaces));
     }
-
-    @Override
-    public void broadCast() {
-        this.rarstAPIProvider.getProviderServer().getOnlinePlayers()
-                .stream()
-                .forEach(this::send);
-    }
-
-    @Override
-    public void broadCast(final String permission) {
-        this.rarstAPIProvider.getProviderServer().getOnlinePlayers()
-                .stream()
-                .filter(player -> PermissionUtil.hasPermission(player, permission))
-                .forEach(this::send);
-    }
-
 }

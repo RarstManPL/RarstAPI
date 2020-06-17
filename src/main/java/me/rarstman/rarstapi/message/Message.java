@@ -3,23 +3,23 @@ package me.rarstman.rarstapi.message;
 import me.rarstman.rarstapi.RarstAPI;
 import me.rarstman.rarstapi.RarstAPIProvider;
 import me.rarstman.rarstapi.util.ColorUtil;
+import me.rarstman.rarstapi.util.PermissionUtil;
 import me.rarstman.rarstapi.util.StringUtil;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public abstract class Message {
+public abstract class Message  {
 
     public String message;
-    public final RarstAPIProvider rarstAPIProvider;
+    private final RarstAPIProvider rarstAPIProvider;
 
     public Message(final String message) {
-        this.message = message;
+        this.message = ColorUtil.color(message);
         this.rarstAPIProvider = RarstAPI.getAPI().getRarstAPIProvider();
     }
 
-    public Message color() {
-        this.message = ColorUtil.color(this.message);
-        return this;
+    public Message(final Message message) {
+        this(message.getMessage());
     }
 
     public Message replace(final String... replaces) {
@@ -27,13 +27,23 @@ public abstract class Message {
         return this;
     }
 
+    public void broadCast() {
+        this.rarstAPIProvider.getProviderServer().getOnlinePlayers()
+                .stream()
+                .forEach(this::send);
+    }
+
+    public void broadCast(final String permission) {
+        this.rarstAPIProvider.getProviderServer().getOnlinePlayers()
+                .stream()
+                .filter(player -> PermissionUtil.hasPermission(player, permission))
+                .forEach(this::send);
+    }
+
     public String getMessage() {
         return this.message;
     }
 
-    public abstract void send(final CommandSender commandSender);
-    public abstract void send(final Player player);
-    public abstract void broadCast();
-    public abstract void broadCast(final String permission);
-
+    public abstract void send(final Player player, final String... replaces);
+    public abstract void send(final CommandSender commandSender, final String... replaces);
 }
