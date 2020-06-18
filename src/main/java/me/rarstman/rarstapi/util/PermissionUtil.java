@@ -9,17 +9,18 @@ import org.bukkit.entity.Player;
 
 public class PermissionUtil {
 
-    private static Permission permissionProvider = HooksManager.getHook(VaultHook.class).get().getHookInstance(VaultHook.class).getPermissionProvider();
+    private static Permission permissionProvider = HooksManager.getHook(VaultHook.class).isPresent() ? HooksManager.getHook(VaultHook.class).get().getPermissionProvider() : null;
 
     public static boolean hasPermission(final CommandSender commandSender, final String permission) {
-        return permissionProvider.has(commandSender, permission);
+        return permissionProvider != null && permissionProvider.has(commandSender, permission);
     }
 
     public static boolean hasPermission(final Player player, final String permission) {
-        return permissionProvider.playerHas(player, permission);
+        return permissionProvider != null && permissionProvider.playerHas(null, player, permission);
     }
 
     public static boolean hasPermission(final OfflinePlayer offlinePlayer, final String permission) {
-        return permissionProvider.playerHas(null, offlinePlayer, permission);
+        return permissionProvider != null && permissionProvider.playerHas(null, offlinePlayer, permission);
     }
+
 }

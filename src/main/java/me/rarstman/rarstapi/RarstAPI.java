@@ -1,62 +1,34 @@
 package me.rarstman.rarstapi;
 
+import me.rarstman.rarstapi.configuration.ConfigManager;
+import me.rarstman.rarstapi.configuration.impl.RarstAPIConfig;
+import me.rarstman.rarstapi.hook.HooksManager;
+import me.rarstman.rarstapi.hook.impl.VaultHook;
 import me.rarstman.rarstapi.logger.Logger;
-import org.bukkit.Bukkit;
-import org.bukkit.Server;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class RarstAPI extends JavaPlugin implements RarstAPIProvider {
+public class RarstAPI extends JavaPlugin {
 
-    private static RarstAPI rarstAPI;
-    private RarstAPIProvider rarstAPIProvider;
-    private Logger logger;
+    private Logger apiLogger;
+    private RarstAPIConfig rarstAPIConfig;
 
-    public RarstAPI(){
-        rarstAPI = this;
+    @Override
+    public void onLoad() {
+        this.apiLogger = new Logger(java.util.logging.Logger.getLogger("RarstAPI"));
     }
 
     @Override
-    public void onLoad(){
-        rarstAPI = this;
-        this.rarstAPIProvider = this;
-
-        this.logger = new Logger(java.util.logging.Logger.getLogger("RarstAPI"));
+    public void onEnable() {
+        HooksManager.registerHook(new VaultHook());
+        ConfigManager.registerConfig(new RarstAPIConfig());
     }
 
-    public void setRarstAPIProvider(final RarstAPIProvider rarstAPIProvider){
-        this.rarstAPIProvider = rarstAPIProvider;
-    }
-
-    public RarstAPIProvider getRarstAPIProvider() {
-        return this.rarstAPIProvider;
+    public Logger getAPILogger() {
+        return this.apiLogger;
     }
 
     public static RarstAPI getAPI() {
-        return rarstAPI;
+        return JavaPlugin.getPlugin(RarstAPI.class);
     }
 
-    @Override
-    public String getProviderName() {
-        return "RarstAPI";
-    }
-
-    @Override
-    public String getProviderVersion() {
-        return "1.0-SNAPSHOT";
-    }
-
-    @Override
-    public Server getProviderServer() {
-        return Bukkit.getServer();
-    }
-
-    @Override
-    public Logger getProviderLogger() {
-        return this.logger;
-    }
-
-    @Override
-    public JavaPlugin getProviderJavaPlugin() {
-        return this;
-    }
 }

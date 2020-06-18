@@ -1,21 +1,18 @@
 package me.rarstman.rarstapi.message;
 
-import me.rarstman.rarstapi.RarstAPI;
-import me.rarstman.rarstapi.RarstAPIProvider;
 import me.rarstman.rarstapi.util.ColorUtil;
 import me.rarstman.rarstapi.util.PermissionUtil;
 import me.rarstman.rarstapi.util.StringUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public abstract class Message  {
 
     public String message;
-    private final RarstAPIProvider rarstAPIProvider;
 
     public Message(final String message) {
         this.message = ColorUtil.color(message);
-        this.rarstAPIProvider = RarstAPI.getAPI().getRarstAPIProvider();
     }
 
     public Message(final Message message) {
@@ -27,17 +24,17 @@ public abstract class Message  {
         return this;
     }
 
-    public void broadCast() {
-        this.rarstAPIProvider.getProviderServer().getOnlinePlayers()
+    public void broadCast(final String... replaces) {
+        Bukkit.getOnlinePlayers()
                 .stream()
-                .forEach(this::send);
+                .forEach(player -> this.send(player, replaces));
     }
 
-    public void broadCast(final String permission) {
-        this.rarstAPIProvider.getProviderServer().getOnlinePlayers()
+    public void broadCast(final String permission, final String... replaces) {
+        Bukkit.getOnlinePlayers()
                 .stream()
                 .filter(player -> PermissionUtil.hasPermission(player, permission))
-                .forEach(this::send);
+                .forEach(player -> this.send(player, replaces));
     }
 
     public String getMessage() {

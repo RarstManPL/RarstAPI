@@ -1,41 +1,31 @@
 package me.rarstman.rarstapi.hook.impl;
 
-import me.rarstman.rarstapi.RarstAPI;
-import me.rarstman.rarstapi.RarstAPIProvider;
-import me.rarstman.rarstapi.hook.PluginHook;
-import me.rarstman.rarstapi.message.Message;
-import me.rarstman.rarstapi.message.impl.ChatMessage;
+import me.rarstman.rarstapi.hook.PluginHookProvider;
+import me.rarstman.rarstapi.hook.exception.HookInitializeException;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-public class VaultHook extends PluginHook {
+public class VaultHook implements PluginHookProvider {
 
     private Permission permissionProvider;
     private Economy economyProvider;
 
-    public VaultHook() {
-        super("Vault");
-    }
-
     @Override
-    public PluginHook initialize() {
-        final RarstAPIProvider rarstAPIProvider = RarstAPI.getAPI().getRarstAPIProvider();
-        final RegisteredServiceProvider<Permission> permissionProvider = rarstAPIProvider.getProviderServer().getServicesManager().getRegistration(Permission.class);
+    public PluginHookProvider initialize() throws HookInitializeException {
+        final RegisteredServiceProvider<Permission> permissionProvider = Bukkit.getServicesManager().getRegistration(Permission.class);
 
         if (permissionProvider == null) {
-            rarstAPIProvider.getProviderLogger().error("Cannot hook into Vault's Permission Provider.");
-            return this;
+            throw new HookInitializeException("Cannot hook into Vault's Permission Provider.");
         }
         this.permissionProvider = permissionProvider.getProvider();
-        final RegisteredServiceProvider<Economy> economyProvider = rarstAPIProvider.getProviderServer().getServicesManager().getRegistration(Economy.class);
+        final RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServicesManager().getRegistration(Economy.class);
 
         if(economyProvider == null){
-            rarstAPIProvider.getProviderLogger().error("Cannot hook into Vault's Economy Provider.");
-            return this;
+            throw new HookInitializeException("Cannot hook into Vault's Economy Provider.");
         }
         this.economyProvider = economyProvider.getProvider();
-        this.setHooked(true);
         return this;
     }
 
@@ -43,7 +33,4 @@ public class VaultHook extends PluginHook {
         return this.permissionProvider;
     }
 
-    public void xd(){
-        Message message = new ChatMessage("Messag");
-    }
 }

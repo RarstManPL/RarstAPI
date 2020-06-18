@@ -1,7 +1,6 @@
 package me.rarstman.rarstapi.logger;
 
-import me.rarstman.rarstapi.RarstAPI;
-import me.rarstman.rarstapi.RarstAPIProvider;
+import org.bukkit.Bukkit;
 
 import java.util.Arrays;
 
@@ -26,15 +25,12 @@ public class Logger {
     }
 
     public void exception(final Exception exception, final String message){
-        final RarstAPIProvider rarstAPIProvider = RarstAPI.getAPI().getRarstAPIProvider();
-
         this.error(" ");
-        this.error(rarstAPIProvider.getProviderName() + "'s exception:");
+        this.error(this.logger.getName() + "'s exception:");
         this.error(" ");
         this.error("Informations:");
         this.error(" > Java version: " + System.getProperty("java.version"));
-        this.error(" > Server version: " + rarstAPIProvider.getProviderServer().getVersion());
-        this.error(" > Plugin version: " + rarstAPIProvider.getProviderVersion());
+        this.error(" > Server version: " + Bukkit.getVersion());
         this.error(" > Author message: " + message);
         this.error(" > Exception message: " + exception.getMessage());
         this.error(" ");
