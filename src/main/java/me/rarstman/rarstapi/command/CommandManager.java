@@ -1,6 +1,6 @@
 package me.rarstman.rarstapi.command;
 
-import me.rarstman.rarstapi.RarstAPI;
+import me.rarstman.rarstapi.RarstAPIPlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
@@ -19,7 +19,7 @@ public class CommandManager {
             field.setAccessible(true);
             commandMap = (CommandMap) field.get(Bukkit.getServer().getPluginManager());
         } catch (final NoSuchFieldException | IllegalAccessException exception){
-            RarstAPI.getAPI().getAPILogger().exception(exception, "Error while trying to get CommandMap.");
+            RarstAPIPlugin.getAPI().getAPILogger().exception(exception, "Error while trying to get CommandMap.");
         }
     }
 

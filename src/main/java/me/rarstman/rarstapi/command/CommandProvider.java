@@ -1,6 +1,5 @@
 package me.rarstman.rarstapi.command;
 
-import me.rarstman.rarstapi.RarstAPI;
 import me.rarstman.rarstapi.configuration.ConfigManager;
 import me.rarstman.rarstapi.configuration.impl.RarstAPIConfig;
 import me.rarstman.rarstapi.message.Message;

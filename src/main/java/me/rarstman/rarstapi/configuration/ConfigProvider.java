@@ -55,7 +55,7 @@ public abstract class ConfigProvider {
     }
 
     public ConfigProvider initialize() {
-        if(!this.load()) {
+        if(!this.checkFileAndLoad()) {
             return this;
         }
         this.parse();
@@ -138,18 +138,6 @@ public abstract class ConfigProvider {
                 });
     }
 
-    private boolean load() {
-        try {
-            this.yamlConfiguration.load(this.file);
-        } catch (final IOException exception) {
-            return this.checkFileAndLoad();
-        } catch (final ParserException | InvalidConfigurationException exception) {
-            this.createBroken();
-            return this.checkFileAndLoad();
-        }
-        return true;
-    }
-
     private void createBroken(){
         final String newName = "broken_" + this.file.getName() + "_" + System.currentTimeMillis() + ".yml";
         try {
@@ -167,7 +155,16 @@ public abstract class ConfigProvider {
                 return false;
             }
         }
-        return this.load();
+
+        try {
+            this.yamlConfiguration.load(this.file);
+        } catch (final IOException exception) {
+            return false;
+        } catch (final ParserException | InvalidConfigurationException exception) {
+            this.createBroken();
+            return this.checkFileAndLoad();
+        }
+        return true;
     }
 
 }

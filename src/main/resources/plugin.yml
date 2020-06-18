@@ -1,0 +1,5 @@
+name: 'RarstAPI'
+main: 'me.rarstman.rarstapi.RarstAPI'
+version: 1
+author: [RarstManPL]
+depend: [Vault]

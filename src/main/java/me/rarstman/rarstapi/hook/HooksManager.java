@@ -1,6 +1,6 @@
 package me.rarstman.rarstapi.hook;
 
-import me.rarstman.rarstapi.RarstAPI;
+import me.rarstman.rarstapi.RarstAPIPlugin;
 import me.rarstman.rarstapi.hook.exception.HookInitializeException;
 
 import java.util.Arrays;
@@ -16,7 +16,7 @@ public class HooksManager {
         try {
             hook.initialize();
         } catch (final HookInitializeException exception) {
-            RarstAPI.getAPI().getAPILogger().error(exception.getMessage());
+            RarstAPIPlugin.getAPI().getAPILogger().error(exception.getMessage());
             return;
         }
         hooks.put(hook.getClass(), hook);

@@ -7,10 +7,9 @@ import me.rarstman.rarstapi.hook.impl.VaultHook;
 import me.rarstman.rarstapi.logger.Logger;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class RarstAPI extends JavaPlugin {
+public class RarstAPIPlugin extends JavaPlugin {
 
     private Logger apiLogger;
-    private RarstAPIConfig rarstAPIConfig;
 
     @Override
     public void onLoad() {
@@ -27,8 +26,8 @@ public class RarstAPI extends JavaPlugin {
         return this.apiLogger;
     }
 
-    public static RarstAPI getAPI() {
-        return JavaPlugin.getPlugin(RarstAPI.class);
+    public static RarstAPIPlugin getAPI() {
+        return JavaPlugin.getPlugin(RarstAPIPlugin.class);
     }
 
 }

@@ -10,7 +10,6 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 public class VaultHook implements PluginHookProvider {
 
     private Permission permissionProvider;
-    private Economy economyProvider;
 
     @Override
     public PluginHookProvider initialize() throws HookInitializeException {
@@ -20,12 +19,6 @@ public class VaultHook implements PluginHookProvider {
             throw new HookInitializeException("Cannot hook into Vault's Permission Provider.");
         }
         this.permissionProvider = permissionProvider.getProvider();
-        final RegisteredServiceProvider<Economy> economyProvider = Bukkit.getServicesManager().getRegistration(Economy.class);
-
-        if(economyProvider == null){
-            throw new HookInitializeException("Cannot hook into Vault's Economy Provider.");
-        }
-        this.economyProvider = economyProvider.getProvider();
         return this;
     }
 

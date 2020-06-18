@@ -13,15 +13,15 @@ public class Logger {
     }
 
     public void info(final String message){
-        this.logger.info(message);
+        this.logger.info("[" + this.logger.getName() + "] " + message);
     }
 
     public void warning(final String message){
-        this.logger.warning(message);
+        this.logger.warning("[" + this.logger.getName() + "] " + message);
     }
 
     public void error(final String message){
-        this.logger.severe(message);
+        this.logger.severe("[" + this.logger.getName() + "] " + message);
     }
 
     public void exception(final Exception exception, final String message){
