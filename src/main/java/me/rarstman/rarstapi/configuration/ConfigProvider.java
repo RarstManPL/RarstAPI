@@ -82,7 +82,7 @@ public abstract class ConfigProvider {
                             this.logger.error("Value " + configPath + " in configuration " + this.file.getPath() + " isn't set. Using default or last correctly parsed value...");
                             return;
                         }
-                        final ParseValue parseValue = field.isAnnotationPresent(ParseValue.class) ? field.getAnnotation(ParseValue.class) : parseValueClass != null ? parseValueClass : null;
+                        final ParseValue parseValue = field.isAnnotationPresent(ParseValue.class) ? field.getAnnotation(ParseValue.class).parseType() != ParseValue.ParseType.DISABLE ? field.getAnnotation(ParseValue.class) : null : parseValueClass != null ? parseValueClass : null;
 
                         if (parseValue != null) {
                             if (!this.yamlConfiguration.isString(configPath)) {

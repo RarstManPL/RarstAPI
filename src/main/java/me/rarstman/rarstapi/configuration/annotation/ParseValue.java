@@ -15,7 +15,8 @@ public @interface ParseValue {
     enum ParseType {
         MESSAGE,
         ITEMBUILDER,
-        COMMANDDATA;
+        COMMANDDATA,
+        DISABLE;
     }
 
     enum MessageType {

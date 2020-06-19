@@ -31,28 +31,36 @@ public class RarstAPIMessages extends ConfigProvider {
     public Message turnOptionNotExist = new ChatMessage("Podana opcja przełączenia nie istnieje!");
 
     @ConfigName("True")
-    public Message true_ = new ChatMessage("tak");
+    @ParseValue(parseType = ParseValue.ParseType.DISABLE)
+    public String true_ = "tak";
 
     @ConfigName("False")
-    public Message false_ = new ChatMessage("nie");
+    @ParseValue(parseType = ParseValue.ParseType.DISABLE)
+    public String false_ = "nie";
 
     @ConfigName("On")
-    public Message on = new ChatMessage("włączony");
+    @ParseValue(parseType = ParseValue.ParseType.DISABLE)
+    public String on = "włączony";
 
     @ConfigName("Off")
-    public Message off = new ChatMessage("wyłączony");
+    @ParseValue(parseType = ParseValue.ParseType.DISABLE)
+    public String off = "wyłączony";
 
     @ConfigName("You")
-    public Message you = new ChatMessage("ciebie");
+    @ParseValue(parseType = ParseValue.ParseType.DISABLE)
+    public String you = "ciebie";
 
     @ConfigName("Lack")
-    public Message lack = new ChatMessage("brak");
+    @ParseValue(parseType = ParseValue.ParseType.DISABLE)
+    public String lack = "brak";
 
     @ConfigName("LackInformation")
-    public Message lackInformation = new ChatMessage("brak informacji");
+    @ParseValue(parseType = ParseValue.ParseType.DISABLE)
+    public String lackInformation = "brak informacji";
 
     @ConfigName("Unknown")
-    public Message unknown = new ChatMessage("nieznany");
+    @ParseValue(parseType = ParseValue.ParseType.DISABLE)
+    public String unknown = "nieznany";
 
     public RarstAPIMessages() {
         super(new File(RarstAPIPlugin.getAPI().getDataFolder(), "config.yml"), RarstAPIPlugin.getAPI().getResource("config.yml"));
