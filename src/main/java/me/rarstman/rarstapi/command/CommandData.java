@@ -8,12 +8,14 @@ public class CommandData {
     private final List<String> aliases;
     private final String description;
     private final String usage;
+    private final boolean enabled;
 
-    public CommandData(final String name, final List<String> aliases, final String description, final String usage) {
+    public CommandData(final String name, final List<String> aliases, final String description, final String usage, final boolean enabled) {
         this.name = name;
         this.aliases = aliases;
         this.description = description;
         this.usage = usage;
+        this.enabled = enabled;
     }
 
     public String getName() {
@@ -32,4 +34,7 @@ public class CommandData {
         return this.usage;
     }
 
+    public boolean isEnabled() {
+        return this.enabled;
+    }
 }

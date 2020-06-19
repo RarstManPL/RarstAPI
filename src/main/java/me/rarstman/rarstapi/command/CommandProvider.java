@@ -2,6 +2,7 @@ package me.rarstman.rarstapi.command;
 
 import me.rarstman.rarstapi.configuration.ConfigManager;
 import me.rarstman.rarstapi.configuration.impl.RarstAPIConfig;
+import me.rarstman.rarstapi.configuration.impl.RarstAPIMessages;
 import me.rarstman.rarstapi.message.Message;
 import me.rarstman.rarstapi.util.CommandUtil;
 import me.rarstman.rarstapi.util.PermissionUtil;
@@ -15,39 +16,44 @@ public abstract class CommandProvider extends Command {
 
     public final String permission;
     public final boolean onlyPlayer;
+    private final boolean enabled;
 
-    public final Message noPermissionMessage;
-    public final Message onlyPlayerMessage;
+    public final RarstAPIMessages rarstAPIMessages;
 
-    public CommandProvider(final String name, final List<String> aliases, final String description, final String usage, final String permission, final boolean onlyPlayer) {
+    public CommandProvider(final String name, final List<String> aliases, final String description, final String usage, final String permission, final boolean onlyPlayer, final boolean enabled) {
         super(name, description, usage, aliases);
 
         this.permission = permission;
         this.onlyPlayer = onlyPlayer;
+        this.enabled = enabled;
 
-        final RarstAPIConfig rarstAPIConfig = ConfigManager.getConfig(RarstAPIConfig.class);
-        this.noPermissionMessage = rarstAPIConfig.noPermission;
-        this.onlyPlayerMessage = rarstAPIConfig.onlyPlayer;
+        this.rarstAPIMessages = ConfigManager.getConfig(RarstAPIMessages.class);
     }
 
     public CommandProvider(final CommandData commandData, final String permission, final boolean onlyPlayer) {
-        this(commandData.getName(), commandData.getAliases(), commandData.getDescription(), commandData.getUsage(), permission, onlyPlayer);
+        this(commandData.getName(), commandData.getAliases(), commandData.getDescription(), commandData.getUsage(), permission, onlyPlayer, commandData.isEnabled());
     }
 
     public CommandProvider register() {
-        CommandUtil.register(this);
+        if(CommandUtil.register(this)) {
+            return null;
+        }
         return this;
+    }
+
+    public boolean isEnabled() {
+        return this.enabled;
     }
 
     @Override
     public boolean execute(final CommandSender commandSender, final String label, final String[] args) {
         if(this.onlyPlayer && !(commandSender instanceof Player)) {
-            this.onlyPlayerMessage.send(commandSender);
+            this.rarstAPIMessages.onlyPlayer.send(commandSender);
             return true;
         }
 
         if(!PermissionUtil.hasPermission(commandSender, this.permission)) {
-            this.noPermissionMessage.send(commandSender, "{permission}", this.permission);
+            this.rarstAPIMessages.onlyPlayer.send(commandSender, "{permission}", this.permission);
             return true;
         }
         this.onExecute(commandSender, args);

@@ -70,6 +70,8 @@ public abstract class ConfigProvider {
         if(!this.checkFileAndLoad()){
             return false;
         }
+        final ParseValue parseValueClass = this.getClass().getAnnotation(ParseValue.class);
+
         Arrays.stream(this.getClass().getDeclaredFields())
                 .filter(field -> Modifier.isPublic(field.getModifiers()) && field.isAnnotationPresent(ConfigName.class))
                 .forEach(field -> {
@@ -80,14 +82,14 @@ public abstract class ConfigProvider {
                             this.logger.error("Value " + configPath + " in configuration " + this.file.getPath() + " isn't set. Using default or last correctly parsed value...");
                             return;
                         }
+                        final ParseValue parseValue = field.isAnnotationPresent(ParseValue.class) ? field.getAnnotation(ParseValue.class) : parseValueClass != null ? parseValueClass : null;
 
-                        if (field.isAnnotationPresent(ParseValue.class)) {
+                        if (parseValue != null) {
                             if (!this.yamlConfiguration.isString(configPath)) {
                                 this.logger.error("Value " + configPath + " in configuration " + this.file.getPath() + " isn't string. Using default or correctly parsed value... ");
                                 return;
                             }
                             final String string = this.yamlConfiguration.getString(configPath);
-                            final ParseValue parseValue = field.getAnnotation(ParseValue.class);
 
                             switch (parseValue.parseType()) {
                                 case MESSAGE: {
@@ -123,8 +125,9 @@ public abstract class ConfigProvider {
                                 case COMMANDDATA: {
                                     if(!this.yamlConfiguration.isString(configPath + ".Name")
                                             || !this.yamlConfiguration.isList(configPath + ".Aliases")
-                                            || !this.yamlConfiguration.isString("Usage")
-                                            || !this.yamlConfiguration.isString("Description")) {
+                                            || !this.yamlConfiguration.isString(configPath + ".Usage")
+                                            || !this.yamlConfiguration.isString(configPath + ".Description")
+                                            || !this.yamlConfiguration.isBoolean(configPath + ".Enabled")) {
                                         this.logger.error("Incomplete command configuration data in file " + this.file.getPath() + ", path " + configPath + ". Using default or last correctly parsed value...");
                                         return;
                                     }
@@ -132,7 +135,8 @@ public abstract class ConfigProvider {
                                             this.yamlConfiguration.getString(configPath + ".Name"),
                                             this.yamlConfiguration.getStringList(configPath + ".Aliases"),
                                             this.yamlConfiguration.getString(configPath + ".Description"),
-                                            this.yamlConfiguration.getString(configPath + ".Usage")
+                                            this.yamlConfiguration.getString(configPath + ".Usage"),
+                                            this.yamlConfiguration.getBoolean(configPath + ".Enabled")
                                     ));
                                     break;
                                 }

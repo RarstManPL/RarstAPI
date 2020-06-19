@@ -11,7 +11,10 @@ public class CommandManager {
     private static final Map<Class<? extends CommandProvider>, CommandProvider> commands = new HashMap<>();
 
     public static void registerCommand(final CommandProvider command) {
-        commands.put(command.getClass(), command.register());
+        if(command.register() == null) {
+            return;
+        }
+        commands.put(command.getClass(), command);
     }
 
     public static void registerCommand(final CommandProvider... commands) {
