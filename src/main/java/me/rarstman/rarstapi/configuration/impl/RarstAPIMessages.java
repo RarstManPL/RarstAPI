@@ -33,6 +33,9 @@ public class RarstAPIMessages extends ConfigProvider {
     @ConfigName("ConfigurationReloaded")
     public Message configurationReloaded = new ChatMessage("Plik konfiguracyjny został przełądowany!");
 
+    @ConfigName("ConfigurationNotCorrectlyReloaded")
+    public Message configurationNotCorrectlyReloaded = new ChatMessage("Plik konfiguracyjny nie został poprawnie przeładowany. Sprawdź konsolę");
+
     @ConfigName("True_")
     @ParseValue(parseType = ParseValue.ParseType.DISABLE)
     public String true_ = "tak";
