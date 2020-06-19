@@ -1,5 +1,6 @@
-name: 'RarstAPI'
-main: 'me.rarstman.rarstapi.RarstAPI'
-version: 1
+main: 'me.rarstman.basictools.BasicToolsPlugin'
+name: ${project.name}
+version: ${project.version}
+description: ${project.description}
 author: [RarstManPL]
-depend: [Vault]
+loadbefore: [Vault]

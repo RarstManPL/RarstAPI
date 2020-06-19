@@ -26,7 +26,7 @@ public class Logger {
 
     public void exception(final Exception exception, final String message){
         this.error(" ");
-        this.error(this.logger.getName() + "'s exception:");
+        this.error("An exception occured");
         this.error(" ");
         this.error("Informations:");
         this.error(" > Java version: " + System.getProperty("java.version"));

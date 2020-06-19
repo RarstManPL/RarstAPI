@@ -3,7 +3,6 @@ package me.rarstman.rarstapi.configuration;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class ConfigManager {
 
@@ -18,7 +17,7 @@ public class ConfigManager {
                 .forEach(ConfigManager::registerConfig);
     }
 
-    public static <A extends ConfigProvider> Optional<A> getConfig(final Class<A> configClass){
-        return Optional.of((A) configs.get(configClass));
+    public static <A extends ConfigProvider> A getConfig(final Class<A> configClass){
+        return (A) configs.get(configClass);
     }
 }

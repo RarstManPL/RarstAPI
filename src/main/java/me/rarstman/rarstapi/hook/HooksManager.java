@@ -1,22 +1,15 @@
 package me.rarstman.rarstapi.hook;
 
-import me.rarstman.rarstapi.RarstAPIPlugin;
-import me.rarstman.rarstapi.hook.exception.HookInitializeException;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class HooksManager {
 
     private static final Map<Class<? extends PluginHookProvider>, PluginHookProvider> hooks = new HashMap<>();
 
     public static void registerHook(final PluginHookProvider hook){
-        try {
-            hook.initialize();
-        } catch (final HookInitializeException exception) {
-            RarstAPIPlugin.getAPI().getAPILogger().error(exception.getMessage());
+        if(hook.hook() == null) {
             return;
         }
         hooks.put(hook.getClass(), hook);
@@ -27,8 +20,8 @@ public class HooksManager {
                 .forEach(HooksManager::registerHook);
     }
 
-    public static <A extends PluginHookProvider> Optional<A> getHook(final Class<A> hookClass){
-        return Optional.of((A) hooks.get(hookClass));
+    public static <A extends PluginHookProvider> A getHook(final Class<A> hookClass){
+        return (A) hooks.get(hookClass);
     }
 
 }

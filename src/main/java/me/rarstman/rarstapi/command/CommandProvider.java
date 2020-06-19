@@ -3,6 +3,7 @@ package me.rarstman.rarstapi.command;
 import me.rarstman.rarstapi.configuration.ConfigManager;
 import me.rarstman.rarstapi.configuration.impl.RarstAPIConfig;
 import me.rarstman.rarstapi.message.Message;
+import me.rarstman.rarstapi.util.CommandUtil;
 import me.rarstman.rarstapi.util.PermissionUtil;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -24,13 +25,18 @@ public abstract class CommandProvider extends Command {
         this.permission = permission;
         this.onlyPlayer = onlyPlayer;
 
-        final RarstAPIConfig rarstAPIConfig = ConfigManager.getConfig(RarstAPIConfig.class).get();
+        final RarstAPIConfig rarstAPIConfig = ConfigManager.getConfig(RarstAPIConfig.class);
         this.noPermissionMessage = rarstAPIConfig.noPermission;
         this.onlyPlayerMessage = rarstAPIConfig.onlyPlayer;
     }
 
     public CommandProvider(final CommandData commandData, final String permission, final boolean onlyPlayer) {
         this(commandData.getName(), commandData.getAliases(), commandData.getDescription(), commandData.getUsage(), permission, onlyPlayer);
+    }
+
+    public CommandProvider register() {
+        CommandUtil.register(this);
+        return this;
     }
 
     @Override
