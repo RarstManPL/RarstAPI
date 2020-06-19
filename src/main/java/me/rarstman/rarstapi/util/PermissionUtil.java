@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 
 public class PermissionUtil {
 
-    private static Permission permissionProvider = HooksManager.getHook(VaultHook.class).get().getPermissionProvider();
+    private static Permission permissionProvider = HooksManager.getHook(VaultHook.class).getPermissionProvider();
 
     public static boolean hasPermission(final CommandSender commandSender, final String permission) {
         return permissionProvider != null && permissionProvider.has(commandSender, permission);
