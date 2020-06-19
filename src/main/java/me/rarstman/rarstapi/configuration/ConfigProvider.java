@@ -85,14 +85,13 @@ public abstract class ConfigProvider {
                         final ParseValue parseValue = field.isAnnotationPresent(ParseValue.class) ? field.getAnnotation(ParseValue.class).parseType() != ParseValue.ParseType.DISABLE ? field.getAnnotation(ParseValue.class) : null : parseValueClass != null ? parseValueClass : null;
 
                         if (parseValue != null) {
-                            if (!this.yamlConfiguration.isString(configPath)) {
-                                this.logger.error("Value " + configPath + " in configuration " + this.file.getPath() + " isn't string. Using default or correctly parsed value... ");
-                                return;
-                            }
-                            final String string = this.yamlConfiguration.getString(configPath);
-
                             switch (parseValue.parseType()) {
                                 case MESSAGE: {
+                                    if (!this.yamlConfiguration.isString(configPath)) {
+                                        this.logger.error("Value " + configPath + " in configuration " + this.file.getPath() + " isn't string. Using default or correctly parsed value... ");
+                                        return;
+                                    }
+                                    final String string = this.yamlConfiguration.getString(configPath);
                                     Message message;
 
                                     switch (parseValue.messageType()) {
@@ -119,7 +118,11 @@ public abstract class ConfigProvider {
                                     break;
                                 }
                                 case ITEMBUILDER: {
-                                    field.set(this, new ItemBuilder(string));
+                                    if (!this.yamlConfiguration.isString(configPath)) {
+                                        this.logger.error("Value " + configPath + " in configuration " + this.file.getPath() + " isn't string. Using default or correctly parsed value... ");
+                                        return;
+                                    }
+                                    field.set(this, new ItemBuilder(this.yamlConfiguration.getString(configPath)));
                                     break;
                                 }
                                 case COMMANDDATA: {

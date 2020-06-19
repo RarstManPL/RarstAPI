@@ -12,14 +12,35 @@ public class PermissionUtil {
     private static Permission permissionProvider = HooksManager.getHook(VaultHook.class).getPermissionProvider();
 
     public static boolean hasPermission(final CommandSender commandSender, final String permission) {
-        return permissionProvider != null && permissionProvider.has(commandSender, permission);
+        if(permission == null) {
+            return true;
+        }
+
+        if(permissionProvider == null) {
+            return false;
+        }
+        return permissionProvider.has(commandSender, permission);
     }
 
     public static boolean hasPermission(final Player player, final String permission) {
+        if(permission == null) {
+            return true;
+        }
+
+        if(permissionProvider == null) {
+            return false;
+        }
         return permissionProvider != null && permissionProvider.playerHas(null, player, permission);
     }
 
     public static boolean hasPermission(final OfflinePlayer offlinePlayer, final String permission) {
+        if(permission == null) {
+            return true;
+        }
+
+        if(permissionProvider == null) {
+            return false;
+        }
         return permissionProvider != null && permissionProvider.playerHas(null, offlinePlayer, permission);
     }
 

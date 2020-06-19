@@ -30,21 +30,24 @@ public class RarstAPIMessages extends ConfigProvider {
     @ConfigName("TurnOptionNotExist")
     public Message turnOptionNotExist = new ChatMessage("Podana opcja przełączenia nie istnieje!");
 
-    @ConfigName("True")
+    @ConfigName("ConfigurationReloaded")
+    public Message configurationReloaded = new ChatMessage("Plik konfiguracyjny został przełądowany!");
+
+    @ConfigName("True_")
     @ParseValue(parseType = ParseValue.ParseType.DISABLE)
     public String true_ = "tak";
 
-    @ConfigName("False")
+    @ConfigName("False_")
     @ParseValue(parseType = ParseValue.ParseType.DISABLE)
     public String false_ = "nie";
 
-    @ConfigName("On")
+    @ConfigName("On_")
     @ParseValue(parseType = ParseValue.ParseType.DISABLE)
-    public String on = "włączony";
+    public String on_ = "włączony";
 
-    @ConfigName("Off")
+    @ConfigName("Off_")
     @ParseValue(parseType = ParseValue.ParseType.DISABLE)
-    public String off = "wyłączony";
+    public String off_ = "wyłączony";
 
     @ConfigName("You")
     @ParseValue(parseType = ParseValue.ParseType.DISABLE)
@@ -63,6 +66,6 @@ public class RarstAPIMessages extends ConfigProvider {
     public String unknown = "nieznany";
 
     public RarstAPIMessages() {
-        super(new File(RarstAPIPlugin.getAPI().getDataFolder(), "config.yml"), RarstAPIPlugin.getAPI().getResource("config.yml"));
+        super(new File(RarstAPIPlugin.getAPI().getDataFolder(), "messages.yml"), RarstAPIPlugin.getAPI().getResource("messages.yml"));
     }
 }
