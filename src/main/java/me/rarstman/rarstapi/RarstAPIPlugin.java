@@ -9,6 +9,8 @@ import me.rarstman.rarstapi.reflection.ReflectionManager;
 import me.rarstman.rarstapi.reflection.impl.CommandMapReflection;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.InputStreamReader;
+
 public class RarstAPIPlugin extends JavaPlugin {
 
     private Logger apiLogger;

@@ -13,11 +13,11 @@ import java.util.List;
 
 public abstract class CommandProvider extends Command {
 
-    private final String permission;
-    private final boolean onlyPlayer;
+    public final String permission;
+    public final boolean onlyPlayer;
 
-    private final Message noPermissionMessage;
-    private final Message onlyPlayerMessage;
+    public final Message noPermissionMessage;
+    public final Message onlyPlayerMessage;
 
     public CommandProvider(final String name, final List<String> aliases, final String description, final String usage, final String permission, final boolean onlyPlayer) {
         super(name, description, usage, aliases);

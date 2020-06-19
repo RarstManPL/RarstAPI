@@ -33,4 +33,5 @@ public class ChatUtil {
                 .stream()
                 .forEach(player -> sendMessage(player, message));
     }
+
 }

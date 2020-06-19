@@ -1,4 +1,4 @@
-main: 'me.rarstman.basictools.BasicToolsPlugin'
+main: 'me.rarstman.rarstapi.RarstAPIPlugin'
 name: ${project.name}
 version: ${project.version}
 description: ${project.description}
