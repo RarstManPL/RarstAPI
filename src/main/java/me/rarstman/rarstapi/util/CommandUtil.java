@@ -17,15 +17,15 @@ public class CommandUtil {
 
     public static boolean register(final CommandProvider commandProvider) {
         if(!commandProvider.isEnabled()) {
-            logger.info("Registration of the " + commandProvider.getClass().getCanonicalName() + " command was skipped due to disable.");
+            logger.info("Registration of the '" + commandProvider.getClass().getCanonicalName() + "' command was skipped due to disable.");
             return false;
         }
         if(commandMap == null) {
-            logger.error("Cannot register command " + commandProvider.getClass().getCanonicalName() + " due to commandMap's lack.");
+            logger.error("Cannot register command '" + commandProvider.getClass().getCanonicalName() + "' due to 'commandMap''s lack.");
             return false;
         }
         commandMap.register(commandProvider.getName(), (Command) commandProvider);
-        logger.info("Correctly registered command " + commandProvider.getClass().getCanonicalName() + ".");
+        logger.info("Correctly registered command '" + commandProvider.getClass().getCanonicalName() + "'.");
         return true;
     }
 
@@ -36,11 +36,11 @@ public class CommandUtil {
 
     public static boolean register(final Command command) {
         if(commandMap == null) {
-            logger.error("Cannot register command " + command.getName() + " due to commandMap's lack.");
+            logger.error("Cannot register command '" + command.getName() + "' due to 'commandMap''s lack.");
             return false;
         }
         commandMap.register(command.getName(), command);
-        logger.info("Correctly registered command " + command.getClass().getCanonicalName() + ".");
+        logger.info("Correctly registered command '" + command.getClass().getCanonicalName() + "'.");
         return true;
     }
 
@@ -48,4 +48,5 @@ public class CommandUtil {
         Arrays.stream(commands)
                 .forEach(CommandUtil::register);
     }
+
 }

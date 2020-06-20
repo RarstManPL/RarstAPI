@@ -1,7 +1,5 @@
 package me.rarstman.rarstapi.command;
 
-import me.rarstman.rarstapi.configuration.ConfigProvider;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +15,7 @@ public class CommandManager {
         commands.put(command.getClass(), command);
     }
 
-    public static void registerCommand(final CommandProvider... commands) {
+    public static void registerCommands(final CommandProvider... commands) {
         Arrays.stream(commands)
                 .forEach(CommandManager::registerCommand);
     }

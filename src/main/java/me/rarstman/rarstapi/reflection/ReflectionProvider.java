@@ -19,7 +19,7 @@ public abstract class ReflectionProvider {
             this.logger.error(exception.getMessage());
             return null;
         }
-        this.logger.info("Correctly loaded " + this.getClass().getName() + " reflection.");
+        this.logger.info("Correctly loaded '" + this.getClass().getName() + "' reflection.");
         return this;
     }
 

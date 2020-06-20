@@ -19,7 +19,7 @@ public class CommandMapReflection extends ReflectionProvider {
             field.setAccessible(true);
             this.commandMap = (CommandMap) field.get(Bukkit.getServer().getPluginManager());
         } catch (final NoSuchFieldException | IllegalAccessException exception) {
-            throw new ReflectionInitializeException("Error while trying to get commandMap");
+            throw new ReflectionInitializeException("Error while trying to get 'commandMap'.");
         }
         return this;
     }

@@ -71,4 +71,5 @@ public class RarstAPIMessages extends ConfigProvider {
     public RarstAPIMessages() {
         super(new File(RarstAPIPlugin.getAPI().getDataFolder(), "messages.yml"), RarstAPIPlugin.getAPI().getResource("messages.yml"));
     }
+
 }

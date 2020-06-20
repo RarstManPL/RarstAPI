@@ -37,4 +37,5 @@ public class CommandData {
     public boolean isEnabled() {
         return this.enabled;
     }
+
 }

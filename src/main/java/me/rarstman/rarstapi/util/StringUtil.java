@@ -23,8 +23,7 @@ public class StringUtil {
 
     public static boolean equalsIgnoreCase(final String string, final String... strings){
         return Arrays.stream(strings)
-                .filter(str -> StringUtils.equalsIgnoreCase(string, str))
-                .findAny()
-                .isPresent();
+                .anyMatch(str -> StringUtils.equalsIgnoreCase(string, str));
     }
+
 }

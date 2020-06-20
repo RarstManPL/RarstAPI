@@ -5,7 +5,7 @@ public class BooleanUtil {
     public static Boolean stringStatusToBoolean(final String string){
         Boolean status = null;
 
-        switch(string){
+        switch(string.toLowerCase()){
             case "on": {
                 status = true;
                 break;

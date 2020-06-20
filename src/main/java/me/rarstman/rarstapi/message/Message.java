@@ -43,4 +43,5 @@ public abstract class Message  {
 
     public abstract void send(final Player player, final String... replaces);
     public abstract void send(final CommandSender commandSender, final String... replaces);
+
 }

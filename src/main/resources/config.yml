@@ -1,0 +1,7 @@
+RarstAPICommand:
+  Name: 'rarstapi'
+  Aliases:
+    - ra
+  Description: 'Przeładowuje konfiguracje'
+  Usage: '/rarstapi'
+  Enabled: true

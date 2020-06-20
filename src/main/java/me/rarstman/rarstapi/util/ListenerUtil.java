@@ -15,7 +15,7 @@ public class ListenerUtil {
 
     public static void register(final ListenerProvider listenerProvider) {
         Bukkit.getPluginManager().registerEvents((Listener) listenerProvider, rarstAPIPlugin);
-        logger.info("Correctly registered listener " + listenerProvider.getClass().getCanonicalName() + ".");
+        logger.info("Correctly registered listener '" + listenerProvider.getClass().getCanonicalName() + "'.");
     }
 
     public static void register(final ListenerProvider... listenerProviders) {
@@ -25,7 +25,7 @@ public class ListenerUtil {
 
     public static void register(final Listener listener) {
         Bukkit.getPluginManager().registerEvents(listener, rarstAPIPlugin);
-        logger.info("Correctly registered listener " + listener.getClass().getCanonicalName() + ".");
+        logger.info("Correctly registered listener '" + listener.getClass().getCanonicalName() + "'.");
     }
 
     public static void register(final Listener... listeners) {

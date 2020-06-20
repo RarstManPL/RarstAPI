@@ -15,11 +15,7 @@ public class PermissionUtil {
         if(permission == null) {
             return true;
         }
-
-        if(permissionProvider == null) {
-            return false;
-        }
-        return permissionProvider.has(commandSender, permission);
+        return permissionProvider != null && permissionProvider.has(commandSender, permission);
     }
 
     public static boolean hasPermission(final Player player, final String permission) {

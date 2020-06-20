@@ -17,4 +17,5 @@ public class ColorUtil {
                 .map(ColorUtil::color)
                 .collect(Collectors.toList());
     }
+
 }

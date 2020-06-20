@@ -40,4 +40,5 @@ public class Logger {
                 .forEach(this::error);
         this.error(" ");
     }
+
 }

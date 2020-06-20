@@ -1,5 +1,7 @@
 package me.rarstman.rarstapi;
 
+import me.rarstman.rarstapi.command.CommandManager;
+import me.rarstman.rarstapi.command.impl.RarstAPICommand;
 import me.rarstman.rarstapi.configuration.ConfigManager;
 import me.rarstman.rarstapi.configuration.impl.RarstAPIConfig;
 import me.rarstman.rarstapi.configuration.impl.RarstAPIMessages;
@@ -29,6 +31,9 @@ public class RarstAPIPlugin extends JavaPlugin {
 
         this.apiLogger.info("Registering reflections...");
         ReflectionManager.registerReflection(new CommandMapReflection());
+
+        this.apiLogger.info("Registering command...");
+        CommandManager.registerCommand(new RarstAPICommand());
     }
 
     public Logger getAPILogger() {

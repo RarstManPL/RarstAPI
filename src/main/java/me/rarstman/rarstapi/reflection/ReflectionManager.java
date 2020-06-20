@@ -23,4 +23,5 @@ public class ReflectionManager {
     public static <A extends ReflectionProvider> A getReflection(final Class<A> reflectionClass){
         return (A) reflections.get(reflectionClass);
     }
+
 }

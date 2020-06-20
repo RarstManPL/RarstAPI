@@ -1,6 +1,5 @@
 main: 'me.rarstman.rarstapi.RarstAPIPlugin'
-name: ${project.name}
-version: ${project.version}
-description: ${project.description}
+name: 'RarstAPI'
 author: [RarstManPL]
+version: ${project.version}
 loadbefore: [Vault]

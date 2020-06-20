@@ -20,4 +20,5 @@ public class ConfigManager {
     public static <A extends ConfigProvider> A getConfig(final Class<A> configClass){
         return (A) configs.get(configClass);
     }
+
 }

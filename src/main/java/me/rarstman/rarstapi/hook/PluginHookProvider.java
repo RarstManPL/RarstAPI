@@ -21,7 +21,7 @@ public abstract class PluginHookProvider {
 
     public PluginHookProvider hook() {
         if(Bukkit.getPluginManager().getPlugin(this.pluginName) == null) {
-            this.logger.error("No " + this.pluginName + " plugin on the server.");
+            this.logger.error("No '" + this.pluginName + "' plugin on the server.");
             return null;
         }
 
@@ -31,7 +31,7 @@ public abstract class PluginHookProvider {
             this.logger.error(exception.getMessage());
             return null;
         }
-        this.logger.info("Correctly hooked into " + this.pluginName + " plugin.");
+        this.logger.info("Correctly hooked into '" + this.pluginName + "' plugin.");
         return this;
     }
 

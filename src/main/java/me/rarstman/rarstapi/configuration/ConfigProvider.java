@@ -3,7 +3,6 @@ package me.rarstman.rarstapi.configuration;
 import me.rarstman.rarstapi.RarstAPIPlugin;
 import me.rarstman.rarstapi.command.CommandData;
 import me.rarstman.rarstapi.configuration.annotation.ConfigName;
-import me.rarstman.rarstapi.configuration.annotation.ConfigPath;
 import me.rarstman.rarstapi.configuration.annotation.ParseValue;
 import me.rarstman.rarstapi.item.ItemBuilder;
 import me.rarstman.rarstapi.logger.Logger;
@@ -40,29 +39,28 @@ public abstract class ConfigProvider {
 
     public boolean save() {
         if(!this.checkFileAndLoad()) {
-            this.logger.error("Cannot save configuration " + this.file.getPath() + " due to load error.");
+            this.logger.error("Cannot save configuration '" + this.file.getPath() + "' due to load error.");
             return false;
         }
-        this.logger.info("Saved configuration " + this.file.getPath() + ".");
+        this.logger.info("Saved configuration '" + this.file.getPath() + "'.");
         return true;
     }
 
     public boolean reload() {
         if(!this.save()) {
-            this.logger.error("Cannot reload configuration " + this.file.getPath() + " due to save error.");
+            this.logger.error("Cannot reload configuration '" + this.file.getPath() + "' due to save error.");
             return false;
         }
         this.parse();
-        this.logger.info("Reloaded configuration " + this.file.getPath() + ".");
+        this.logger.info("Reloaded configuration '" + this.file.getPath() + "'.");
         return true;
     }
 
     public ConfigProvider initialize() {
-        if(!this.checkFileAndLoad()) {
-            return this;
+        if(this.checkFileAndLoad()) {
+            this.parse();
         }
-        this.parse();
-        this.logger.info("Initialized configuration " + this.file.getPath() + ".");
+        this.logger.info("Initialized configuration '" + this.file.getPath() + "'.");
         return this;
     }
 
@@ -76,10 +74,10 @@ public abstract class ConfigProvider {
                 .filter(field -> Modifier.isPublic(field.getModifiers()) && field.isAnnotationPresent(ConfigName.class))
                 .forEach(field -> {
                     try {
-                        final String configPath = (field.isAnnotationPresent(ConfigPath.class) ? field.getAnnotation(ConfigPath.class).value() + "." : "") + field.getAnnotation(ConfigName.class).value();
+                        final String configPath = field.getAnnotation(ConfigName.class).value();
 
                         if (!this.yamlConfiguration.isSet(configPath)) {
-                            this.logger.error("Value " + configPath + " in configuration " + this.file.getPath() + " isn't set. Using default or last correctly parsed value...");
+                            this.logger.error("Value '" + configPath + "' in configuration '" + this.file.getPath() + "' isn't set. Using default or last correctly parsed value...");
                             return;
                         }
                         final ParseValue parseValue = field.isAnnotationPresent(ParseValue.class) ? field.getAnnotation(ParseValue.class).parseType() != ParseValue.ParseType.DISABLE ? field.getAnnotation(ParseValue.class) : null : parseValueClass != null ? parseValueClass : null;
@@ -88,7 +86,7 @@ public abstract class ConfigProvider {
                             switch (parseValue.parseType()) {
                                 case MESSAGE: {
                                     if (!this.yamlConfiguration.isString(configPath)) {
-                                        this.logger.error("Value " + configPath + " in configuration " + this.file.getPath() + " isn't string. Using default or correctly parsed value... ");
+                                        this.logger.error("Value '" + configPath + "' in configuration '" + this.file.getPath() + "' isn't string. Using default or correctly parsed value... ");
                                         return;
                                     }
                                     final String string = this.yamlConfiguration.getString(configPath);
@@ -119,7 +117,7 @@ public abstract class ConfigProvider {
                                 }
                                 case ITEMBUILDER: {
                                     if (!this.yamlConfiguration.isString(configPath)) {
-                                        this.logger.error("Value " + configPath + " in configuration " + this.file.getPath() + " isn't string. Using default or correctly parsed value... ");
+                                        this.logger.error("Value '" + configPath + "' in configuration '" + this.file.getPath() + "' isn't string. Using default or correctly parsed value... ");
                                         return;
                                     }
                                     field.set(this, new ItemBuilder(this.yamlConfiguration.getString(configPath)));
@@ -131,7 +129,7 @@ public abstract class ConfigProvider {
                                             || !this.yamlConfiguration.isString(configPath + ".Usage")
                                             || !this.yamlConfiguration.isString(configPath + ".Description")
                                             || !this.yamlConfiguration.isBoolean(configPath + ".Enabled")) {
-                                        this.logger.error("Incomplete command configuration data in file " + this.file.getPath() + ", path " + configPath + ". Using default or last correctly parsed value...");
+                                        this.logger.error("Incomplete command configuration data in file '" + this.file.getPath() + "', path '" + configPath + "'. Using default or last correctly parsed value...");
                                         return;
                                     }
                                     field.set(this, new CommandData(
@@ -148,7 +146,7 @@ public abstract class ConfigProvider {
                         }
                         field.set(this, this.yamlConfiguration.get(configPath, field.get(this)));
                     } catch (final IllegalAccessException exception) {
-                        this.logger.exception(exception, "Error while trying to set field " + field.getName() + " in configuration class " + this.getClass().getName() + ". Using default or last correctly parsed value...");
+                        this.logger.exception(exception, "Error while trying to set field '" + field.getName() + "' in configuration class '" + this.getClass().getName() + "'. Using default or last correctly parsed value...");
                     }
                 });
         return true;
@@ -160,10 +158,10 @@ public abstract class ConfigProvider {
             FileUtils.copyFile(this.file, new File(this.file.getParentFile(), newName));
             this.file.delete();
         } catch (final IOException exception) {
-            this.logger.exception(exception, "Error while trying to create broken version of configuration " + this.file.getPath() + ". Using default or last correctly parsed configuration values...");
+            this.logger.exception(exception, "Error while trying to create broken version of configuration '" + this.file.getPath() + "'. Using default or last correctly parsed configuration values...");
             return false;
         }
-        this.logger.info("Created broken version of configuration " + this.file.getPath() + ".");
+        this.logger.info("Created broken version of configuration '" + this.file.getPath() + "'.");
         return true;
     }
 
@@ -171,9 +169,9 @@ public abstract class ConfigProvider {
         if(!this.file.getParentFile().exists()) {
             try {
                 this.file.getParentFile().mkdirs();
-                this.logger.info("Created folder " + this.file.getParentFile().getPath() + ".");
+                this.logger.info("Created folder '" + this.file.getParentFile().getPath() + "'.");
             } catch (final SecurityException exception) {
-                this.logger.exception(exception, "Error while trying to create folder " + this.file.getParentFile().getPath() + ". Using default or last correctly parsed configuration values...");
+                this.logger.exception(exception, "Error while trying to create folder '" + this.file.getParentFile().getPath() + "'. Using default or last correctly parsed configuration values...");
                 return false;
             }
         }
@@ -184,7 +182,7 @@ public abstract class ConfigProvider {
                 FileUtils.copyToFile(this.defaultConfig, file);
                 this.logger.info("Created configuration file " + this.file.getPath() + ".");
             } catch (final IOException exception) {
-                this.logger.exception(exception, "Error while trying to create configuration file " + this.file.getPath() + ". Using default or last correctly parsed configuration values...");
+                this.logger.exception(exception, "Error while trying to create configuration file '" + this.file.getPath() + "'. Using default or last correctly parsed configuration values...");
                 return false;
             }
         }
@@ -199,10 +197,10 @@ public abstract class ConfigProvider {
         try {
             this.yamlConfiguration.load(this.file);
         } catch (final IOException exception) {
-            this.logger.exception(exception, "Error while trying to load yamlConfiguration of " + this.file.getPath() + ". Using default or last correctly parsed configuration values...");
+            this.logger.exception(exception, "Error while trying to load yamlConfiguration of '" + this.file.getPath() + "'. Using default or last correctly parsed configuration values...");
             return false;
         } catch (final ParserException | InvalidConfigurationException exception) {
-            this.logger.error("Configuration " + this.file.getPath() + " has syntax error(s). Trying to fix...");
+            this.logger.error("Configuration '" + this.file.getPath() + "' has syntax error(s). Trying to fix...");
             if(!this.createBroken()) {
                 return false;
             }

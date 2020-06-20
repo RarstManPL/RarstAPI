@@ -1,9 +1,7 @@
 package me.rarstman.rarstapi.command;
 
 import me.rarstman.rarstapi.configuration.ConfigManager;
-import me.rarstman.rarstapi.configuration.impl.RarstAPIConfig;
 import me.rarstman.rarstapi.configuration.impl.RarstAPIMessages;
-import me.rarstman.rarstapi.message.Message;
 import me.rarstman.rarstapi.util.CommandUtil;
 import me.rarstman.rarstapi.util.PermissionUtil;
 import org.bukkit.command.Command;
@@ -15,7 +13,8 @@ import java.util.List;
 public abstract class CommandProvider extends Command {
 
     public final String permission;
-    public final boolean onlyPlayer;
+
+    private final boolean onlyPlayer;
     private final boolean enabled;
 
     public final RarstAPIMessages rarstAPIMessages;
@@ -61,4 +60,5 @@ public abstract class CommandProvider extends Command {
     }
 
     public abstract void onExecute(final CommandSender commandSender, final String[] args);
+
 }
