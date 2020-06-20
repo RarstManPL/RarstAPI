@@ -12,7 +12,11 @@ public class Logger {
         this.logger = logger;
     }
 
-    public void info(final String message){
+    public void clearly(final String message) {
+        this.logger.info(message);
+    }
+
+    public void info(final String message) {
         this.logger.info("[" + this.logger.getName() + "] " + message);
     }
 
