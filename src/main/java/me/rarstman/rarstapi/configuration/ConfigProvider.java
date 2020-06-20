@@ -209,4 +209,15 @@ public abstract class ConfigProvider {
         return true;
     }
 
+    public File getFile() {
+        return this.file;
+    }
+
+    public InputStream getDefaultConfig() {
+        return this.defaultConfig;
+    }
+
+    public YamlConfiguration getYamlConfiguration() {
+        return this.yamlConfiguration;
+    }
 }
