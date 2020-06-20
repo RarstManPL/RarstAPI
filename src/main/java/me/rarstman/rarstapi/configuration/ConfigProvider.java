@@ -180,7 +180,7 @@ public abstract class ConfigProvider {
             try {
                 this.file.createNewFile();
                 FileUtils.copyToFile(this.defaultConfig, file);
-                this.logger.info("Created configuration file " + this.file.getPath() + ".");
+                this.logger.info("Created configuration file '" + this.file.getPath() + "'.");
             } catch (final IOException exception) {
                 this.logger.exception(exception, "Error while trying to create configuration file '" + this.file.getPath() + "'. Using default or last correctly parsed configuration values...");
                 return false;

@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 public class RarstAPIConfig extends ConfigProvider {
 
-    @ConfigName("RarstAPICommandData")
+    @ConfigName("RarstAPICommand")
     @ParseValue(parseType = ParseValue.ParseType.COMMANDDATA)
     public CommandData rarstAPICommandData  = new CommandData("rarstapi", Arrays.asList("ra"), "Przeładowuje konfiguracje", "/rarstapi", true);
 

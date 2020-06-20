@@ -12,7 +12,7 @@ import java.util.Arrays;
 
 public class CommandUtil {
 
-    private static final CommandMap commandMap = ReflectionManager.getReflection(CommandMapReflection.class).getCommandMap();
+    private static final CommandMap commandMap = ReflectionManager.getReflection(CommandMapReflection.class) == null ? null : ReflectionManager.getReflection(CommandMapReflection.class).getCommandMap();
     private static final Logger logger = RarstAPIPlugin.getAPI().getAPILogger();
 
     public static boolean register(final CommandProvider commandProvider) {

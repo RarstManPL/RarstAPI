@@ -23,6 +23,8 @@ public class RarstAPIPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        this.apiLogger.clearly(" ");
+
         this.apiLogger.info("Registering hooks...");
         HooksManager.registerHook(new VaultHook());
 
@@ -34,6 +36,8 @@ public class RarstAPIPlugin extends JavaPlugin {
 
         this.apiLogger.info("Registering command...");
         CommandManager.registerCommand(new RarstAPICommand());
+
+        this.apiLogger.clearly(" ");
     }
 
     public Logger getAPILogger() {

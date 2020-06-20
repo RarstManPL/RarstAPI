@@ -1,6 +1,6 @@
-NoPermission: 'Nie posiadasz odpowiednich uprawnień! {permission}'
+NoPermission: 'Nie posiadasz odpowiednich uprawnień! {PERMISSION}'
 OnlyPlayer: 'To polecenie przeznaczone jest jedynie dla graczy!'
-BadUsage: 'Złe użycie. Poprawne: {usage}'
+BadUsage: 'Złe użycie. Poprawne: {USAGE}'
 PlayerNotExist: 'Podany gracz nie istnieje lub jest offline!'
 PlayerNotExistOrConsole: 'Podany gracz nie istnieje, jest offline lub jesteś konsolą i próbujesz wykonać polecenie bez podania gracza'
 TurnOptionNotExist: 'Podana opcja przełączenia nie istnieje!'

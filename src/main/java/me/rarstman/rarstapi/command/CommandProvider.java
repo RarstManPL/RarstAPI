@@ -52,7 +52,7 @@ public abstract class CommandProvider extends Command {
         }
 
         if(!PermissionUtil.hasPermission(commandSender, this.permission)) {
-            this.rarstAPIMessages.onlyPlayer.send(commandSender, "{PERMISSION}", this.permission);
+            this.rarstAPIMessages.noPermission.send(commandSender, "{PERMISSION}", this.permission);
             return true;
         }
         this.onExecute(commandSender, args);
