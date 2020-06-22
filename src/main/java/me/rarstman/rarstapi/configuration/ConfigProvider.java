@@ -4,6 +4,7 @@ import me.rarstman.rarstapi.RarstAPIPlugin;
 import me.rarstman.rarstapi.command.CommandData;
 import me.rarstman.rarstapi.configuration.annotation.ConfigName;
 import me.rarstman.rarstapi.configuration.annotation.ParseValue;
+import me.rarstman.rarstapi.database.DatabaseData;
 import me.rarstman.rarstapi.item.ItemBuilder;
 import me.rarstman.rarstapi.logger.Logger;
 import me.rarstman.rarstapi.message.Message;
@@ -141,6 +142,41 @@ public abstract class ConfigProvider {
                                     ));
                                     break;
                                 }
+                                case DATABASEDATA: {
+                                    DatabaseData databaseData;
+
+                                    switch (parseValue.databaseType()) {
+                                        default:
+                                        case MYSQL: {
+                                            if(!this.yamlConfiguration.isString(configPath + ".Host")
+                                                    || !this.yamlConfiguration.isInt(configPath + ".Port")
+                                                    || !this.yamlConfiguration.isString(configPath + ".User")
+                                                    || !this.yamlConfiguration.isString(configPath + ".Password")
+                                                    || !this.yamlConfiguration.isString(configPath + ".Base")) {
+                                                this.logger.error("Incomplete database configuration data in file '" + this.file.getPath() + "', path '" + configPath + "'. Using default or last correctly parsed value...");
+                                                return;
+                                            }
+                                            databaseData = new DatabaseData(
+                                                    this.yamlConfiguration.getString(configPath + ".Host"),
+                                                    this.yamlConfiguration.getInt(configPath + ".Port"),
+                                                    this.yamlConfiguration.getString(configPath + ".User"),
+                                                    this.yamlConfiguration.getString(configPath + ".Password"),
+                                                    this.yamlConfiguration.getString(configPath + ".Base")
+                                            );
+                                            break;
+                                        }
+                                        case SQLITE: {
+                                            if(!this.yamlConfiguration.isString(configPath + ".File")) {
+                                                this.logger.error("Incomplete database configuration data in file '" + this.file.getPath() + "', path '" + configPath + "'. Using default or last correctly parsed value...");
+                                                return;
+                                            }
+                                            databaseData = new DatabaseData(this.yamlConfiguration.getString(configPath + ".File"));
+                                            break;
+                                        }
+                                    }
+                                    field.set(this, databaseData);
+                                    break;
+                                }
                             }
                             return;
                         }
@@ -220,4 +256,5 @@ public abstract class ConfigProvider {
     public YamlConfiguration getYamlConfiguration() {
         return this.yamlConfiguration;
     }
+
 }

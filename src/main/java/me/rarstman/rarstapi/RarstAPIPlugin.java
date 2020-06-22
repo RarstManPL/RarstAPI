@@ -14,6 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class RarstAPIPlugin extends JavaPlugin {
 
+    private boolean disabling = false;
     private Logger apiLogger;
 
     @Override
@@ -38,6 +39,15 @@ public class RarstAPIPlugin extends JavaPlugin {
         CommandManager.registerCommand(new RarstAPICommand());
 
         this.apiLogger.clearly(" ");
+    }
+
+    @Override
+    public void onDisable() {
+        this.disabling = true;
+    }
+
+    public boolean isDisabling() {
+        return this.disabling;
     }
 
     public Logger getAPILogger() {

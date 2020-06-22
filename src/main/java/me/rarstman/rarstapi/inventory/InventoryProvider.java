@@ -2,6 +2,7 @@ package me.rarstman.rarstapi.inventory;
 
 import me.rarstman.rarstapi.listener.ListenerProvider;
 import me.rarstman.rarstapi.util.ColorUtil;
+import me.rarstman.rarstapi.util.NumberUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -59,6 +60,11 @@ public abstract class InventoryProvider extends ListenerProvider {
         return this;
     }
 
+    public InventoryProvider setFirstFreeSlot(final ClickableItem clickableItem) {
+        this.setItem(NumberUtil.findFirstMissingNumber(this.clickableItems.keySet()), clickableItem);
+        return this;
+    }
+
     public InventoryProvider fill(final String field, final ClickableItem clickableItem) {
         if(this.inventoryTemplate == null) {
             return this;
@@ -66,6 +72,18 @@ public abstract class InventoryProvider extends ListenerProvider {
         this.inventoryTemplate.getSlots(field)
                 .stream()
                 .forEach(slot -> this.setItem(slot, clickableItem));
+        return this;
+    }
+
+    public InventoryProvider fillFirstFreeField(final String field, final ClickableItem clickableItem) {
+        final Slot slot = this.inventoryTemplate.getSlots(field)
+                .stream()
+                .filter(var -> !this.clickableItems.containsKey(var.getSlot()))
+                .findFirst()
+                .get();
+        if(slot != null) {
+            this.setItem(slot.getSlot(), clickableItem);
+        }
         return this;
     }
 

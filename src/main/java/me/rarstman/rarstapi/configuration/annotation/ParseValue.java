@@ -11,11 +11,13 @@ public @interface ParseValue {
 
     ParseType parseType();
     MessageType messageType() default MessageType.CHAT;
+    DatabaseType databaseType() default DatabaseType.MYSQL;
 
     enum ParseType {
         MESSAGE,
         ITEMBUILDER,
         COMMANDDATA,
+        DATABASEDATA,
         DISABLE;
     }
 
@@ -24,6 +26,11 @@ public @interface ParseValue {
         TITLE,
         BOSSBAR,
         CHAT;
+    }
+
+    enum DatabaseType {
+        MYSQL,
+        SQLITE;
     }
 
 }
