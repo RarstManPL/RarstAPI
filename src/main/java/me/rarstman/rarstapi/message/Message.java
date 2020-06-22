@@ -30,7 +30,7 @@ public abstract class Message  {
                 .forEach(player -> this.send(player, replaces));
     }
 
-    public void broadCast(final String permission, final String... replaces) {
+    public void broadCastPermission(final String permission, final String... replaces) {
         Bukkit.getOnlinePlayers()
                 .stream()
                 .filter(player -> PermissionUtil.hasPermission(player, permission))

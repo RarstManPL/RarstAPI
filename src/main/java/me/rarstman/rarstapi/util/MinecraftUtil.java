@@ -58,42 +58,30 @@ public class MinecraftUtil {
         return time > 240000L ? null : time;
     }
 
-    public static boolean isStormy(final String string){
-        Boolean isStormy = null;
-
-        switch (string.toLowerCase()) {
-            case "thunder":
-            case "rain":
-            case "storm": {
-                isStormy = true;
-                break;
-            }
-            case "clear":
-            case "sun": {
-                isStormy = false;
-                break;
-            }
-        }
-        return isStormy;
-    }
-
-    public static boolean isThundering(final String string){
-        Boolean isThundering = null;
+    public static Weather parseWeather(final String string){
+        Boolean stormy = null;
+        Boolean thundering = null;
 
         switch (string.toLowerCase()) {
             case "thunder": {
-                isThundering = true;
+                stormy = true;
+                thundering = true;
                 break;
             }
-            case "storm":
             case "rain":
+            case "storm": {
+                stormy = true;
+                thundering = false;
+                break;
+            }
             case "clear":
             case "sun": {
-                isThundering = false;
+                stormy = false;
+                thundering = false;
                 break;
             }
         }
-        return isThundering;
+        return new Weather(thundering, stormy);
     }
 
     public static String minecraftHourFromMills(long time){
@@ -101,6 +89,26 @@ public class MinecraftUtil {
         final int hours = Math.round(time/1000L);
         final int minutes = Math.round((time-hours*1000L)/60L);
         return (hours < 10 ? "0" + String.valueOf(hours) : String.valueOf(hours)) + ":" + (minutes < 10 ? "0" + String.valueOf(minutes) : String.valueOf(minutes));
+    }
+
+    public static class Weather {
+
+        private final Boolean thundering;
+        private final Boolean stormy;
+
+        public Weather(final Boolean thundering, final Boolean stormy) {
+            this.thundering = thundering;
+            this.stormy = stormy;
+        }
+
+        public Boolean isStormy() {
+            return this.stormy;
+        }
+
+        public Boolean isThundering() {
+            return this.thundering;
+        }
+
     }
 
 }

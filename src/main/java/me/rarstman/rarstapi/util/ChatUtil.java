@@ -21,7 +21,7 @@ public class ChatUtil {
                 .forEach(player -> sendMessage(player, message, replaces));
     }
 
-    public static void broadCast(final String permission, final String message, final String... replaces) {
+    public static void broadCastPermission(final String permission, final String message, final String... replaces) {
         Bukkit.getOnlinePlayers()
                 .stream()
                 .filter(player -> PermissionUtil.hasPermission(player, permission))
