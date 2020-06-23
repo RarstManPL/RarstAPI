@@ -12,6 +12,7 @@ import me.rarstman.rarstapi.message.impl.ActionBarMessage;
 import me.rarstman.rarstapi.message.impl.BossBarMessage;
 import me.rarstman.rarstapi.message.impl.ChatMessage;
 import me.rarstman.rarstapi.message.impl.TitleMessage;
+import me.rarstman.rarstapi.reflection.ReflectionUtil;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -85,9 +86,29 @@ public abstract class ConfigProvider {
 
                         if (parseValue != null) {
                             switch (parseValue.parseType()) {
+                                case ENUM: {
+                                    if (!this.yamlConfiguration.isString(configPath) || !this.yamlConfiguration.isList(configPath)) {
+                                        this.logger.error("Value '" + configPath + "' in configuration '" + this.file.getPath() + "' isn't string or list. Using default or last correctly parsed value... ");
+                                        return;
+                                    }
+
+                                    if(this.yamlConfiguration.isString(configPath)) {
+                                        final String string = this.yamlConfiguration.getString(configPath);
+
+                                        if(ReflectionUtil.parseEnum(parseValue.enumClazz(), string) == null) {
+                                            this.logger.error("Cannot parse enum '" + parseValue.enumClazz().getCanonicalName() + "' from value '" + string + "' in configuration '" + this.file.getPath() + "'. Using default or last correctly parsed value...");
+                                            return;
+                                        }
+                                        field.set(this, ReflectionUtil.parseEnum(parseValue.enumClazz(), string));
+                                        return;
+                                    }
+                                    field.set(this, ReflectionUtil.parseEnums(parseValue.enumClazz(), this.yamlConfiguration.getStringList(configPath)));
+                                    this.logger.warning("Parsed enums as list in configuration '" + this.file.getPath() + "'. Invalid values may have been omitted.");
+                                    return;
+                                }
                                 case MESSAGE: {
                                     if (!this.yamlConfiguration.isString(configPath)) {
-                                        this.logger.error("Value '" + configPath + "' in configuration '" + this.file.getPath() + "' isn't string. Using default or correctly parsed value... ");
+                                        this.logger.error("Value '" + configPath + "' in configuration '" + this.file.getPath() + "' isn't string. Using default or last correctly parsed value... ");
                                         return;
                                     }
                                     final String string = this.yamlConfiguration.getString(configPath);
