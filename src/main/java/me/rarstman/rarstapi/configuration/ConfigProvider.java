@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
 
 public abstract class ConfigProvider {
@@ -82,30 +83,14 @@ public abstract class ConfigProvider {
                             this.logger.error("Value '" + configPath + "' in configuration '" + this.file.getPath() + "' isn't set. Using default or last correctly parsed value...");
                             return;
                         }
+
+                        if(field.getType().isEnum()) {
+
+                        }
                         final ParseValue parseValue = field.isAnnotationPresent(ParseValue.class) ? field.getAnnotation(ParseValue.class).parseType() != ParseValue.ParseType.DISABLE ? field.getAnnotation(ParseValue.class) : null : parseValueClass != null ? parseValueClass : null;
 
                         if (parseValue != null) {
                             switch (parseValue.parseType()) {
-                                case ENUM: {
-                                    if (!this.yamlConfiguration.isString(configPath) || !this.yamlConfiguration.isList(configPath)) {
-                                        this.logger.error("Value '" + configPath + "' in configuration '" + this.file.getPath() + "' isn't string or list. Using default or last correctly parsed value... ");
-                                        return;
-                                    }
-
-                                    if(this.yamlConfiguration.isString(configPath)) {
-                                        final String string = this.yamlConfiguration.getString(configPath);
-
-                                        if(ReflectionUtil.parseEnum(parseValue.enumClazz(), string) == null) {
-                                            this.logger.error("Cannot parse enum '" + parseValue.enumClazz().getCanonicalName() + "' from value '" + string + "' in configuration '" + this.file.getPath() + "'. Using default or last correctly parsed value...");
-                                            return;
-                                        }
-                                        field.set(this, ReflectionUtil.parseEnum(parseValue.enumClazz(), string));
-                                        return;
-                                    }
-                                    field.set(this, ReflectionUtil.parseEnums(parseValue.enumClazz(), this.yamlConfiguration.getStringList(configPath)));
-                                    this.logger.warning("Parsed enums as list in configuration '" + this.file.getPath() + "'. Invalid values may have been omitted.");
-                                    return;
-                                }
                                 case MESSAGE: {
                                     if (!this.yamlConfiguration.isString(configPath)) {
                                         this.logger.error("Value '" + configPath + "' in configuration '" + this.file.getPath() + "' isn't string. Using default or last correctly parsed value... ");

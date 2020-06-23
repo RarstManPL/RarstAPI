@@ -14,14 +14,12 @@ public @interface ParseValue {
     ParseType parseType();
     MessageType messageType() default MessageType.CHAT;
     DatabaseType databaseType() default DatabaseType.MYSQL;
-    Class<? extends Enum> enumClazz() default EntityType.class;
 
     enum ParseType {
         MESSAGE,
         ITEMBUILDER,
         COMMANDDATA,
         DATABASEDATA,
-        ENUM,
         DISABLE;
     }
 
