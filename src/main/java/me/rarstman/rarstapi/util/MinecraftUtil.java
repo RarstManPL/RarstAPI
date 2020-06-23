@@ -4,8 +4,8 @@ import org.apache.commons.lang.StringUtils;
 
 public class MinecraftUtil {
 
-    public static Long getMinecraftTime(final String string){
-        Long time = null;
+    public static long getMinecraftTime(final String string){
+        long time = -1L;
 
         switch (string.toLowerCase()) {
             case "daystart":
@@ -55,7 +55,7 @@ public class MinecraftUtil {
                 break;
             }
         }
-        return time > 240000L ? null : time;
+        return time > 240000L ? -1L :  time;
     }
 
     public static Weather parseWeather(final String string){
