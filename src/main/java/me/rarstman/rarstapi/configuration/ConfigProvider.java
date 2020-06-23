@@ -251,6 +251,13 @@ public abstract class ConfigProvider {
         return true;
     }
 
+    public <A> A getFieldValue(final String fieldName, final Class<A> parseClazz) {
+        try {
+            return (A) this.getClass().getDeclaredField(fieldName).get(this);
+        } catch (final NoSuchFieldException | IllegalAccessException ignored) {}
+        return null;
+    }
+
     public File getFile() {
         return this.file;
     }
