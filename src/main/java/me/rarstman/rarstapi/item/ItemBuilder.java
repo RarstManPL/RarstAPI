@@ -91,6 +91,11 @@ public class ItemBuilder {
                             break;
                         }
                         case "lore": {
+                            Arrays.asList(optionSplitted[1].split("|"))
+                                    .stream()
+                                    .map(string -> StringUtils.join(string.split("_"), " "))
+                                    .collect(Collectors.toList())
+                                    .forEach(str -> System.out.println(str));
                             this.setLore(
                                     Arrays.asList(optionSplitted[1].split("|"))
                                             .stream()
@@ -190,7 +195,7 @@ public class ItemBuilder {
     public ItemBuilder addEnchantments(final Map<Enchantment, Integer> enchantments) {
         enchantments
                 .entrySet()
-                .forEach(entrySet -> this.itemMeta.addEnchant(entrySet.getKey(), entrySet.getValue(), true));
+                .forEach(entrySet -> this.itemMeta.addEnchant(entrySet.getKey(), entrySet.getValue(), false));
         return this.updateItemMeta();
     }
 

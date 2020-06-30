@@ -14,7 +14,7 @@ public class ChestInventory extends InventoryProvider {
 
     @Override
     public InventoryProvider build() {
-        this.inventory = Bukkit.createInventory(null, rows.columns, this.title);
+        this.inventory = Bukkit.createInventory(null, rows.slots, this.title);
         this.clickableItems
                 .entrySet()
                 .stream()
@@ -22,4 +22,5 @@ public class ChestInventory extends InventoryProvider {
                 .forEach(entrySet -> this.inventory.setItem(entrySet.getKey(), entrySet.getValue().getItemStack()));
         return this;
     }
+
 }

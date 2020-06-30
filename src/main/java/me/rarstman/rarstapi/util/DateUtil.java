@@ -12,13 +12,13 @@ public class DateUtil {
 
     public static long stringToMills(final String string) {
         if (StringUtils.isNumeric(string)) {
-            return Long.valueOf(string);
+            return Long.parseLong(string);
         }
 
         if (string.length() < 2 || !StringUtils.isNumeric(string.substring(0, string.length() - 1))) {
             return 0L;
         }
-        long time = Long.valueOf(string.substring(0, string.length() - 1));
+        long time = Long.parseLong(string.substring(0, string.length() - 1));
 
         switch (string.toLowerCase().charAt(string.length() - 1)) {
             case 's': {
@@ -35,13 +35,14 @@ public class DateUtil {
             }
             case 'd': {
                 time *= 86400000L;
+                break;
             }
             case 'w': {
                 time *= 604800000L;
                 break;
             }
             case 'o': {
-                time *= 2629800000L;
+                time *= 2592000000L;
                 break;
             }
             case 'y': {

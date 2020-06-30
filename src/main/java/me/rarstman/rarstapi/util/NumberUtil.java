@@ -15,4 +15,14 @@ public class NumberUtil {
         set.remove(numbers);
         return set.stream().findFirst().isPresent() ? set.stream().findFirst().get() : Collections.max(numbers) + 1;
     }
+
+    public static boolean isNumber(final String string) {
+        try {
+            Integer.parseInt(string);
+        } catch (final NumberFormatException exception) {
+            return false;
+        }
+        return true;
+    }
+
 }
