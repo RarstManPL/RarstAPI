@@ -2,13 +2,14 @@ package me.rarstman.rarstapi.inventory.impl;
 
 import me.rarstman.rarstapi.RarstAPIPlugin;
 import me.rarstman.rarstapi.inventory.InventoryProvider;
+import me.rarstman.rarstapi.task.impl.LaterTask;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.entity.Player;
 
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-public class AnvilInventory extends InventoryProvider<BiFunction<Player, String, AnvilGUI.Response>, Consumer<Player>, AnvilInventory> {
+public class AnvilInventory extends InventoryProvider<BiFunction<Player, String, String>, Consumer<Player>, AnvilInventory> {
 
     private AnvilGUI.Builder anvilGUI;
     private final String text;

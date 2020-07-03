@@ -56,10 +56,10 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.WesJD.AnvilGUI</groupId>
-            <artifactId>anvilgui</artifactId>
-            <version>ef71db62ec</version>
-            <scope>provided</scope>
+            <groupId>com.github.RarstManPL</groupId>
+            <artifactId>AnvilGUI</artifactId>
+            <version>a9c3858a17</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
