@@ -25,6 +25,9 @@ public class ClickableItem {
     }
 
     public void onClick(final InventoryClickEvent inventoryClickEvent) {
+        if(this.onClick == null) {
+            return;
+        }
         this.onClick.accept(inventoryClickEvent);
     }
 

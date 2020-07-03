@@ -10,9 +10,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 
-import java.util.function.Consumer;
-
-public class ChestInventory extends InventoryProvider<Consumer<InventoryCloseEvent>, Consumer<InventoryCloseEvent>, ChestInventory> {
+public class ChestInventory extends InventoryProvider {
 
     private Inventory inventory;
     private final Rows rows;
@@ -29,15 +27,6 @@ public class ChestInventory extends InventoryProvider<Consumer<InventoryCloseEve
         }
         player.closeInventory();
         player.openInventory(this.inventory);
-    }
-
-    @Override
-    public void reOpenInventory() {
-        this.inventory.getViewers()
-                .stream()
-                .filter(viewer -> viewer instanceof Player)
-                .map(viewer -> (Player) viewer)
-                .forEach(this::openInventory);
     }
 
     @Override
@@ -63,6 +52,10 @@ public class ChestInventory extends InventoryProvider<Consumer<InventoryCloseEve
         }
         if(this.clickableItems.get(event.getSlot()).isClickSet()) {
             this.clickableItems.get(event.getSlot()).onClick(event);
+
+            if(this.onComplete != null) {
+                this.onComplete.apply((Player) event.getWhoClicked(), "ClickableItem Clicked");
+            }
         }
     }
 
@@ -77,7 +70,7 @@ public class ChestInventory extends InventoryProvider<Consumer<InventoryCloseEve
         }
 
         if(this.onComplete != null) {
-            this.onComplete.accept(event);
+            this.onComplete.apply((Player) event.getPlayer(), "Inventory Closed");
         }
     }
 

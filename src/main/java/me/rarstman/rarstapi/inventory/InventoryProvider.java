@@ -4,75 +4,77 @@ import me.rarstman.rarstapi.listener.ListenerProvider;
 import me.rarstman.rarstapi.util.ColorUtil;
 import me.rarstman.rarstapi.util.NumberUtil;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-public abstract class InventoryProvider<A, B, C> extends ListenerProvider {
+public abstract class InventoryProvider extends ListenerProvider {
 
     private InventoryTemplate inventoryTemplate;
     protected final Map<Integer, ClickableItem> clickableItems = new HashMap<>();
     protected String title = "";
 
-    protected A onComplete;
-    protected B onClose;
+    protected BiFunction<Player, String, String> onComplete;
+    protected Consumer<InventoryCloseEvent> onClose;
 
-    public C setTitle(final String title) {
+    public InventoryProvider setTitle(final String title) {
         this.title = ColorUtil.color(title);
-        return (C) this;
+        return this;
     }
 
-    public C setInventoryTemplate(final InventoryTemplate inventoryTemplate) {
+    public InventoryProvider setInventoryTemplate(final InventoryTemplate inventoryTemplate) {
         this.inventoryTemplate = inventoryTemplate;
-        return (C) this;
+        return this;
     }
 
-    public C onClose(final B onClose) {
+    public InventoryProvider onClose(final Consumer<InventoryCloseEvent> onClose) {
         this.onClose = onClose;
-        return (C) this;
+        return this;
     }
 
-    public C onComplete(final A onComplete) {
+    public InventoryProvider onComplete(final BiFunction<Player, String, String> onComplete) {
         this.onComplete = onComplete;
-        return (C) this;
+        return this;
     }
 
-    public C setItem(final int slot, final ClickableItem clickableItem) {
+    public InventoryProvider setItem(final int slot, final ClickableItem clickableItem) {
         if(slot < 0) {
-            return (C) this;
+            return this;
         }
         this.clickableItems.put(slot, clickableItem);
-        return (C) this;
+        return this;
     }
 
-    public C setItem(final Slot slot, final ClickableItem clickableItem) {
+    public InventoryProvider setItem(final Slot slot, final ClickableItem clickableItem) {
         this.setItem(slot.getSlot(), clickableItem);
-        return (C) this;
+        return this;
     }
 
-    public C setFirstFreeSlot(final ClickableItem clickableItem) {
+    public InventoryProvider setFirstFreeSlot(final ClickableItem clickableItem) {
         this.setItem(NumberUtil.findFirstMissingNumber(this.clickableItems.keySet()), clickableItem);
-        return (C) this;
+        return this;
     }
 
-    public C fill(final String field, final ClickableItem clickableItem) {
+    public InventoryProvider fill(final String field, final ClickableItem clickableItem) {
         if(this.inventoryTemplate == null) {
-            return (C) this;
+            return this;
         }
         this.inventoryTemplate.getSlots(field)
                 .stream()
                 .forEach(slot -> this.setItem(slot, clickableItem));
-        return (C) this;
+        return this;
     }
 
-    public C fillFirstFreeField(final String field, final ClickableItem clickableItem) {
+    public InventoryProvider fillFirstFreeField(final String field, final ClickableItem clickableItem) {
         this.inventoryTemplate.getSlots(field)
                 .stream()
                 .filter(var -> !this.clickableItems.containsKey(var.getSlot()))
                 .findFirst()
                 .ifPresent(slot -> this.setItem(slot.getSlot(), clickableItem));
-        return (C) this;
+        return this;
     }
 
     public InventoryTemplate getInventoryTemplate() {
@@ -87,13 +89,7 @@ public abstract class InventoryProvider<A, B, C> extends ListenerProvider {
         return this.title;
     }
 
-    public void update(final Consumer<InventoryProvider> updateConsumer) {
-        updateConsumer.accept(this);
-        this.build();
-    }
-
-    public abstract C build();
+    public abstract InventoryProvider build();
     public abstract void openInventory(final Player player);
-    public abstract void reOpenInventory();
 
 }

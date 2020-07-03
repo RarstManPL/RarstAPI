@@ -4,12 +4,8 @@ import me.rarstman.rarstapi.RarstAPIPlugin;
 import me.rarstman.rarstapi.inventory.InventoryProvider;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-
-public class AnvilInventory extends InventoryProvider<BiFunction<Player, String, String>, Consumer<InventoryCloseEvent>, AnvilInventory> {
+public class AnvilInventory extends InventoryProvider {
 
     private AnvilGUI.Builder anvilGUI;
     private final String text;
@@ -25,15 +21,12 @@ public class AnvilInventory extends InventoryProvider<BiFunction<Player, String,
     }
 
     @Override
-    public void reOpenInventory() {
-    }
-
-    @Override
     public AnvilInventory build() {
         this.anvilGUI = new AnvilGUI.Builder()
                 .plugin(RarstAPIPlugin.getAPI())
                 .title(this.title)
                 .onComplete(this.onComplete)
+                .onClose(this.onClose)
                 .text(this.text);
         this.clickableItems
                 .entrySet()
