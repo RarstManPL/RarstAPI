@@ -1,7 +1,6 @@
 package me.rarstman.rarstapi.message.impl;
 
 import me.rarstman.rarstapi.message.Message;
-import me.rarstman.rarstapi.util.ChatUtil;
 import me.rarstman.rarstapi.util.ColorUtil;
 import me.rarstman.rarstapi.util.StringUtil;
 import org.bukkit.command.CommandSender;

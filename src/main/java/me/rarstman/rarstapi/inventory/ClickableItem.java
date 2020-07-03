@@ -1,6 +1,7 @@
 package me.rarstman.rarstapi.inventory;
 
 import me.rarstman.rarstapi.item.ItemBuilder;
+import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -10,6 +11,10 @@ public class ClickableItem {
 
     private final ItemStack itemStack;
     private Consumer<InventoryClickEvent> onClick;
+
+    public ClickableItem(final Material material) {
+        this(new ItemBuilder(material));
+    }
 
     public ClickableItem(final ItemBuilder itemBuilder) {
         this(itemBuilder.build());

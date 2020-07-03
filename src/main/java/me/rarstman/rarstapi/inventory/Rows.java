@@ -20,9 +20,15 @@ public enum Rows {
         this.slots = slots;
     }
 
-    public static Optional<Rows> valueOf(final int slots) {
+    public static Optional<Rows> getBySlots(final int slots) {
         return Arrays.stream(Rows.values())
-                .filter(rows -> rows.columns == slots)
+                .filter(rows -> rows.slots == slots)
+                .findAny();
+    }
+
+    public static Optional<Rows> getByColumns(final int columns) {
+        return Arrays.stream(Rows.values())
+                .filter(rows -> rows.columns == columns)
                 .findAny();
     }
 

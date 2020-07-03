@@ -14,6 +14,7 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -87,21 +88,20 @@ public class ItemBuilder {
                 .forEach(optionSplitted -> {
                     switch (optionSplitted[0].toLowerCase()) {
                         case "name": {
-                            this.setName(optionSplitted[1]);
+                            this.setName(StringUtils.join(optionSplitted[1].split("_"), " "));
                             break;
                         }
                         case "lore": {
-                            Arrays.asList(optionSplitted[1].split("|"))
+                            String[] loreSplitted = optionSplitted[1].split("|");
+                            List<String> lore = new ArrayList<>();
+                            Arrays.stream(loreSplitted)
+                                    .forEach(lr -> lore.add(StringUtils.join(lr.split("_"), " ")));
+                            /*Arrays.asList(optionSplitted[1].split("|"))
                                     .stream()
                                     .map(string -> StringUtils.join(string.split("_"), " "))
                                     .collect(Collectors.toList())
-                                    .forEach(str -> System.out.println(str));
-                            this.setLore(
-                                    Arrays.asList(optionSplitted[1].split("|"))
-                                            .stream()
-                                            .map(string -> StringUtils.join(string.split("_"), " "))
-                                            .collect(Collectors.toList())
-                            );
+                                    .forEach(str -> System.out.println(str));*/
+                            this.setLore(lore);
                             break;
                         }
                         case "owner": {
@@ -129,7 +129,7 @@ public class ItemBuilder {
                         case "potions": {
                             this.addPotionEffects(
                                     Arrays.stream(optionSplitted[1].split(","))
-                                            .map(potionData -> potionData.split(":"))
+                                            .map(potionData -> potionData.split("-"))
                                             .filter(potionData -> PotionEffectType.getByName(potionData[0]) != null && StringUtils.isNumeric(potionData[2]))
                                             .map(potionData -> new PotionEffect(PotionEffectType.getByName(potionData[0].toUpperCase()), ((Long) DateUtil.stringToMills(potionData[1])).intValue(), Integer.valueOf(potionData[2])))
                                             .toArray(PotionEffect[]::new)
@@ -139,7 +139,7 @@ public class ItemBuilder {
                         case "enchants": {
                             this.addEnchantments(
                                     Arrays.stream(optionSplitted[1].split(","))
-                                            .map(enchantData -> enchantData.split(":"))
+                                            .map(enchantData -> enchantData.split("-"))
                                             .filter(enchantData -> Enchantment.getByKey(NamespacedKey.minecraft(enchantData[0].toUpperCase())) != null && StringUtils.isNumeric(enchantData[1]))
                                             .collect(Collectors.toMap(enchantData -> Enchantment.getByKey(NamespacedKey.minecraft(enchantData[0].toUpperCase())), enchantData -> Integer.valueOf(enchantData[1])))
                             );

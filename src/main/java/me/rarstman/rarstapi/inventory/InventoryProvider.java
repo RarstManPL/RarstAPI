@@ -1,10 +1,13 @@
 package me.rarstman.rarstapi.inventory;
 
+import me.rarstman.rarstapi.item.ItemBuilder;
 import me.rarstman.rarstapi.listener.ListenerProvider;
 import me.rarstman.rarstapi.util.ColorUtil;
 import me.rarstman.rarstapi.util.NumberUtil;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +33,10 @@ public abstract class InventoryProvider extends ListenerProvider {
         return this;
     }
 
+    public InventoryProvider setInventoryTemplate(final String... template) {
+        return this.setInventoryTemplate(new InventoryTemplate(template));
+    }
+
     public InventoryProvider onClose(final Consumer<InventoryCloseEvent> onClose) {
         this.onClose = onClose;
         return this;
@@ -48,14 +55,48 @@ public abstract class InventoryProvider extends ListenerProvider {
         return this;
     }
 
+    public InventoryProvider setItem(final int slot, final ItemStack itemStack) {
+        return this.setItem(slot, new ClickableItem(itemStack));
+    }
+
+    public InventoryProvider setItem(final int slot, final ItemBuilder itemBuilder) {
+        return this.setItem(slot, new ClickableItem(itemBuilder));
+    }
+
+    public InventoryProvider setItem(final int slot, final Material material) {
+        return this.setItem(slot, new ClickableItem(material));
+    }
+
     public InventoryProvider setItem(final Slot slot, final ClickableItem clickableItem) {
-        this.setItem(slot.getSlot(), clickableItem);
-        return this;
+        return this.setItem(slot.getSlot(), clickableItem);
+    }
+
+    public InventoryProvider setItem(final Slot slot, final ItemStack itemStack) {
+        return this.setItem(slot, new ClickableItem(itemStack));
+    }
+
+    public InventoryProvider setItem(final Slot slot, final ItemBuilder itemBuilder) {
+        return this.setItem(slot, new ClickableItem(itemBuilder));
+    }
+
+    public InventoryProvider setItem(final Slot slot, final Material material) {
+        return this.setItem(slot, new ClickableItem(material));
     }
 
     public InventoryProvider setFirstFreeSlot(final ClickableItem clickableItem) {
-        this.setItem(NumberUtil.findFirstMissingNumber(this.clickableItems.keySet()), clickableItem);
-        return this;
+        return this.setItem(NumberUtil.findFirstMissingNumber(this.clickableItems.keySet()), clickableItem);
+    }
+
+    public InventoryProvider setFirstFreeSlot(final ItemStack itemStack) {
+        return this.setFirstFreeSlot(new ClickableItem(itemStack));
+    }
+
+    public InventoryProvider setFirstFreeSlot(final ItemBuilder itemBuilder) {
+        return this.setFirstFreeSlot(new ClickableItem(itemBuilder));
+    }
+
+    public InventoryProvider setFirstFreeSlot(final Material material) {
+        return this.setFirstFreeSlot(new ClickableItem(material));
     }
 
     public InventoryProvider fill(final String field, final ClickableItem clickableItem) {
@@ -68,6 +109,18 @@ public abstract class InventoryProvider extends ListenerProvider {
         return this;
     }
 
+    public InventoryProvider fill(final String field, final ItemBuilder itemBuilder) {
+        return this.fill(field, new ClickableItem(itemBuilder));
+    }
+
+    public InventoryProvider fill(final String field, final ItemStack itemStack) {
+        return this.fill(field, new ClickableItem(itemStack));
+    }
+
+    public InventoryProvider fill(final String field, final Material material) {
+        return this.fill(field, new ClickableItem(material));
+    }
+
     public InventoryProvider fillFirstFreeField(final String field, final ClickableItem clickableItem) {
         this.inventoryTemplate.getSlots(field)
                 .stream()
@@ -75,6 +128,18 @@ public abstract class InventoryProvider extends ListenerProvider {
                 .findFirst()
                 .ifPresent(slot -> this.setItem(slot.getSlot(), clickableItem));
         return this;
+    }
+
+    public InventoryProvider fillFirstFreeField(final String field, final ItemBuilder itemBuilder) {
+        return this.fillFirstFreeField(field, new ClickableItem(itemBuilder));
+    }
+
+    public InventoryProvider fillFirstFreeField(final String field, final ItemStack itemStack) {
+        return this.fillFirstFreeField(field, new ClickableItem(itemStack));
+    }
+
+    public InventoryProvider fillFirstFreeField(final String field, final Material material) {
+        return this.fillFirstFreeField(field, new ClickableItem(material));
     }
 
     public InventoryTemplate getInventoryTemplate() {

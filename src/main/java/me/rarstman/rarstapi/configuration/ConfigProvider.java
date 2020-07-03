@@ -8,8 +8,6 @@ import me.rarstman.rarstapi.database.DatabaseData;
 import me.rarstman.rarstapi.item.ItemBuilder;
 import me.rarstman.rarstapi.logger.Logger;
 import me.rarstman.rarstapi.message.Message;
-import me.rarstman.rarstapi.message.impl.ActionBarMessage;
-import me.rarstman.rarstapi.message.impl.BossBarMessage;
 import me.rarstman.rarstapi.message.impl.ChatMessage;
 import me.rarstman.rarstapi.message.impl.TitleMessage;
 import org.apache.commons.io.FileUtils;
@@ -105,14 +103,6 @@ public abstract class ConfigProvider {
                                         }
                                         case TITLE: {
                                             message = new TitleMessage(string);
-                                            break;
-                                        }
-                                        case ACTIONBAR: {
-                                            message = new ActionBarMessage(string);
-                                            break;
-                                        }
-                                        case BOSSBAR: {
-                                            message = new BossBarMessage(string);
                                             break;
                                         }
 
