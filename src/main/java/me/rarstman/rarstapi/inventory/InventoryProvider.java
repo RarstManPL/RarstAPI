@@ -4,28 +4,19 @@ import me.rarstman.rarstapi.listener.ListenerProvider;
 import me.rarstman.rarstapi.util.ColorUtil;
 import me.rarstman.rarstapi.util.NumberUtil;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.Inventory;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public abstract class InventoryProvider extends ListenerProvider {
+public abstract class InventoryProvider<A, B> extends ListenerProvider {
 
+    private InventoryTemplate inventoryTemplate;
     protected final Map<Integer, ClickableItem> clickableItems = new HashMap<>();
     protected String title = "";
-    protected Inventory inventory;
-    private InventoryTemplate inventoryTemplate;
-    private Consumer<InventoryCloseEvent> onClose;
-    private boolean blockDragging = false;
 
-    public InventoryProvider() {
-        this.register();
-    }
+    protected A onComplete;
+    protected B onClose;
 
     public InventoryProvider setTitle(final String title) {
         this.title = ColorUtil.color(title);
@@ -37,13 +28,13 @@ public abstract class InventoryProvider extends ListenerProvider {
         return this;
     }
 
-    public InventoryProvider onClose(final Consumer<InventoryCloseEvent> onClose) {
+    public InventoryProvider onClose(final B onClose) {
         this.onClose = onClose;
         return this;
     }
 
-    public InventoryProvider blockDragging() {
-        this.blockDragging = true;
+    public InventoryProvider onComplete(final A onComplete) {
+        this.onComplete = onComplete;
         return this;
     }
 
@@ -84,30 +75,6 @@ public abstract class InventoryProvider extends ListenerProvider {
         return this;
     }
 
-    public void openInventory(final Player player) {
-        if(this.inventory == null) {
-            return;
-        }
-        player.openInventory(this.inventory);
-    }
-
-    public void reOpenInventory() {
-        this.inventory.getViewers()
-                .stream()
-                .map(humanEntity -> (Player) humanEntity)
-                .forEach(this::openInventory);
-    }
-
-    public void update(final Consumer<InventoryProvider> updateConsumer) {
-        updateConsumer.accept(this);
-        this.build();
-        this.reOpenInventory();
-    }
-
-    public Inventory getInventory() {
-        return this.inventory;
-    }
-
     public InventoryTemplate getInventoryTemplate() {
         return this.inventoryTemplate;
     }
@@ -120,34 +87,13 @@ public abstract class InventoryProvider extends ListenerProvider {
         return this.title;
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onInventoryClick(final InventoryClickEvent event) {
-        if(event.getClickedInventory() != this.inventory) {
-            return;
-        }
-
-        if(this.blockDragging) {
-            event.setCancelled(true);
-        }
-
-        if(!this.clickableItems.containsKey(event.getSlot())){
-            return;
-        }
-        this.clickableItems.get(event.getSlot()).onClick(event);
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onInventoryClose(final InventoryCloseEvent event) {
-        if(this.onClose == null) {
-            return;
-        }
-
-        if(event.getInventory() != this.inventory) {
-            return;
-        }
-        this.onClose.accept(event);
+    public void update(final Consumer<InventoryProvider> updateConsumer) {
+        updateConsumer.accept(this);
+        this.build();
     }
 
     public abstract InventoryProvider build();
+    public abstract void openInventory(final Player player);
+    public abstract void reOpenInventory();
 
 }

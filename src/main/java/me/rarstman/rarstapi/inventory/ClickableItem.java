@@ -24,8 +24,12 @@ public class ClickableItem {
         return this;
     }
 
-    protected void onClick(final InventoryClickEvent inventoryClickEvent) {
+    public void onClick(final InventoryClickEvent inventoryClickEvent) {
         this.onClick.accept(inventoryClickEvent);
+    }
+
+    public boolean isClickSet() {
+        return this.onClick != null;
     }
 
     public ItemStack getItemStack() {

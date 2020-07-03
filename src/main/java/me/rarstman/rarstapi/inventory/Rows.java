@@ -22,7 +22,7 @@ public enum Rows {
 
     public static Optional<Rows> valueOf(final int slots) {
         return Arrays.stream(Rows.values())
-                .filter(rows -> rows.slots == slots)
+                .filter(rows -> rows.columns == slots)
                 .findAny();
     }
 

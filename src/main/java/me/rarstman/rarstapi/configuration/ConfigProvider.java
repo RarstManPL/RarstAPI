@@ -12,7 +12,6 @@ import me.rarstman.rarstapi.message.impl.ActionBarMessage;
 import me.rarstman.rarstapi.message.impl.BossBarMessage;
 import me.rarstman.rarstapi.message.impl.ChatMessage;
 import me.rarstman.rarstapi.message.impl.TitleMessage;
-import me.rarstman.rarstapi.reflection.ReflectionUtil;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -22,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
 
 public abstract class ConfigProvider {
