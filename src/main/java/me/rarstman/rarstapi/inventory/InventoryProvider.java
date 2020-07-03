@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public abstract class InventoryProvider<A, B> extends ListenerProvider {
+public abstract class InventoryProvider<A, B, C> extends ListenerProvider {
 
     private InventoryTemplate inventoryTemplate;
     protected final Map<Integer, ClickableItem> clickableItems = new HashMap<>();
@@ -18,61 +18,61 @@ public abstract class InventoryProvider<A, B> extends ListenerProvider {
     protected A onComplete;
     protected B onClose;
 
-    public InventoryProvider setTitle(final String title) {
+    public C setTitle(final String title) {
         this.title = ColorUtil.color(title);
-        return this;
+        return (C) this;
     }
 
-    public InventoryProvider setInventoryTemplate(final InventoryTemplate inventoryTemplate) {
+    public C setInventoryTemplate(final InventoryTemplate inventoryTemplate) {
         this.inventoryTemplate = inventoryTemplate;
-        return this;
+        return (C) this;
     }
 
-    public InventoryProvider onClose(final B onClose) {
+    public C onClose(final B onClose) {
         this.onClose = onClose;
-        return this;
+        return (C) this;
     }
 
-    public InventoryProvider onComplete(final A onComplete) {
+    public C onComplete(final A onComplete) {
         this.onComplete = onComplete;
-        return this;
+        return (C) this;
     }
 
-    public InventoryProvider setItem(final int slot, final ClickableItem clickableItem) {
+    public C setItem(final int slot, final ClickableItem clickableItem) {
         if(slot < 0) {
-            return this;
+            return (C) this;
         }
         this.clickableItems.put(slot, clickableItem);
-        return this;
+        return (C) this;
     }
 
-    public InventoryProvider setItem(final Slot slot, final ClickableItem clickableItem) {
+    public C setItem(final Slot slot, final ClickableItem clickableItem) {
         this.setItem(slot.getSlot(), clickableItem);
-        return this;
+        return (C) this;
     }
 
-    public InventoryProvider setFirstFreeSlot(final ClickableItem clickableItem) {
+    public C setFirstFreeSlot(final ClickableItem clickableItem) {
         this.setItem(NumberUtil.findFirstMissingNumber(this.clickableItems.keySet()), clickableItem);
-        return this;
+        return (C) this;
     }
 
-    public InventoryProvider fill(final String field, final ClickableItem clickableItem) {
+    public C fill(final String field, final ClickableItem clickableItem) {
         if(this.inventoryTemplate == null) {
-            return this;
+            return (C) this;
         }
         this.inventoryTemplate.getSlots(field)
                 .stream()
                 .forEach(slot -> this.setItem(slot, clickableItem));
-        return this;
+        return (C) this;
     }
 
-    public InventoryProvider fillFirstFreeField(final String field, final ClickableItem clickableItem) {
+    public C fillFirstFreeField(final String field, final ClickableItem clickableItem) {
         this.inventoryTemplate.getSlots(field)
                 .stream()
                 .filter(var -> !this.clickableItems.containsKey(var.getSlot()))
                 .findFirst()
                 .ifPresent(slot -> this.setItem(slot.getSlot(), clickableItem));
-        return this;
+        return (C) this;
     }
 
     public InventoryTemplate getInventoryTemplate() {
@@ -92,7 +92,7 @@ public abstract class InventoryProvider<A, B> extends ListenerProvider {
         this.build();
     }
 
-    public abstract InventoryProvider build();
+    public abstract C build();
     public abstract void openInventory(final Player player);
     public abstract void reOpenInventory();
 

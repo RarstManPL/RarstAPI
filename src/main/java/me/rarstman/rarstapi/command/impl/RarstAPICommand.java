@@ -3,6 +3,8 @@ package me.rarstman.rarstapi.command.impl;
 import me.rarstman.rarstapi.command.CommandProvider;
 import me.rarstman.rarstapi.configuration.ConfigManager;
 import me.rarstman.rarstapi.configuration.impl.RarstAPIConfig;
+import me.rarstman.rarstapi.inventory.InventoryProvider;
+import me.rarstman.rarstapi.inventory.impl.AnvilInventory;
 import org.bukkit.command.CommandSender;
 
 public class RarstAPICommand extends CommandProvider {

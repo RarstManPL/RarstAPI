@@ -12,7 +12,7 @@ import org.bukkit.inventory.Inventory;
 
 import java.util.function.Consumer;
 
-public class ChestInventory extends InventoryProvider<Consumer<InventoryCloseEvent>, Consumer<InventoryCloseEvent>> {
+public class ChestInventory extends InventoryProvider<Consumer<InventoryCloseEvent>, Consumer<InventoryCloseEvent>, ChestInventory> {
 
     private Inventory inventory;
     private final Rows rows;
@@ -41,7 +41,7 @@ public class ChestInventory extends InventoryProvider<Consumer<InventoryCloseEve
     }
 
     @Override
-    public InventoryProvider build() {
+    public ChestInventory build() {
         this.inventory = Bukkit.createInventory(null, rows.slots, this.title);
         this.clickableItems
                 .entrySet()

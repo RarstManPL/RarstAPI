@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
-public class AnvilInventory extends InventoryProvider<BiFunction<Player, String, AnvilGUI.Response>, Consumer<Player>> {
+public class AnvilInventory extends InventoryProvider<BiFunction<Player, String, AnvilGUI.Response>, Consumer<Player>, AnvilInventory> {
 
     private AnvilGUI.Builder anvilGUI;
     private final String text;
@@ -28,7 +28,7 @@ public class AnvilInventory extends InventoryProvider<BiFunction<Player, String,
     }
 
     @Override
-    public InventoryProvider build() {
+    public AnvilInventory build() {
         this.anvilGUI = new AnvilGUI.Builder()
                 .plugin(RarstAPIPlugin.getAPI())
                 .title(this.title)
