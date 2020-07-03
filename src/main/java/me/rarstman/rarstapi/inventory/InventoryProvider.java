@@ -17,11 +17,11 @@ import java.util.function.Consumer;
 public abstract class InventoryProvider extends ListenerProvider {
 
     protected final Map<Integer, ClickableItem> clickableItems = new HashMap<>();
-    protected String title;
+    protected String title = "";
     protected Inventory inventory;
-    protected InventoryTemplate inventoryTemplate;
-    protected Consumer<InventoryCloseEvent> onClose;
-    protected boolean blockDragging = false;
+    private InventoryTemplate inventoryTemplate;
+    private Consumer<InventoryCloseEvent> onClose;
+    private boolean blockDragging = false;
 
     public InventoryProvider() {
         this.register();
@@ -76,14 +76,11 @@ public abstract class InventoryProvider extends ListenerProvider {
     }
 
     public InventoryProvider fillFirstFreeField(final String field, final ClickableItem clickableItem) {
-        final Slot slot = this.inventoryTemplate.getSlots(field)
+        this.inventoryTemplate.getSlots(field)
                 .stream()
                 .filter(var -> !this.clickableItems.containsKey(var.getSlot()))
                 .findFirst()
-                .get();
-        if(slot != null) {
-            this.setItem(slot.getSlot(), clickableItem);
-        }
+                .ifPresent(slot -> this.setItem(slot.getSlot(), clickableItem));
         return this;
     }
 
@@ -125,7 +122,7 @@ public abstract class InventoryProvider extends ListenerProvider {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onInventoryClick(final InventoryClickEvent event) {
-        if(event.getInventory() != this.inventory) {
+        if(event.getClickedInventory() != this.inventory) {
             return;
         }
 

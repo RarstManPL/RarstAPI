@@ -8,11 +8,15 @@ import java.util.function.Consumer;
 
 public class ClickableItem {
 
-    private final ItemBuilder itemBuilder;
+    private final ItemStack itemStack;
     private Consumer<InventoryClickEvent> onClick;
 
     public ClickableItem(final ItemBuilder itemBuilder) {
-        this.itemBuilder = itemBuilder;
+        this(itemBuilder.build());
+    }
+
+    public ClickableItem(final ItemStack itemStack) {
+        this.itemStack = itemStack;
     }
 
     public ClickableItem onClick(final Consumer<InventoryClickEvent> onClick) {
@@ -20,12 +24,12 @@ public class ClickableItem {
         return this;
     }
 
-    public void onClick(final InventoryClickEvent inventoryClickEvent) {
+    protected void onClick(final InventoryClickEvent inventoryClickEvent) {
         this.onClick.accept(inventoryClickEvent);
     }
 
     public ItemStack getItemStack() {
-        return this.itemBuilder.build();
+        return this.itemStack;
     }
 
 }

@@ -1,5 +1,8 @@
 package me.rarstman.rarstapi.inventory;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 public enum Rows {
 
     ONE(1, 9),
@@ -15,6 +18,12 @@ public enum Rows {
     Rows(final int columns, final int slots) {
         this.columns = columns;
         this.slots = slots;
+    }
+
+    public static Optional<Rows> valueOf(final int slots) {
+        return Arrays.stream(Rows.values())
+                .filter(rows -> rows.slots == slots)
+                .findAny();
     }
 
 }

@@ -86,6 +86,7 @@ public class MinecraftUtil {
 
     public static String minecraftHourFromMills(long time){
         time = time - 18000L + 24000L;
+        time -= Math.round(time/24000L) * 24000L;
         final int hours = Math.round(time/1000L);
         final int minutes = Math.round((time-hours*1000L)/60L);
         return (hours < 10 ? "0" + String.valueOf(hours) : String.valueOf(hours)) + ":" + (minutes < 10 ? "0" + String.valueOf(minutes) : String.valueOf(minutes));

@@ -14,8 +14,11 @@ public class InventoryTemplate {
     private final Multimap<String, Slot> templateMap = ArrayListMultimap.create();
 
     public InventoryTemplate(List<String> template) {
+        if(template.isEmpty()) {
+            return;
+        }
         template = template
-                .subList(0, template.size() > 6 ? 6 : template.size() - 1)
+                .subList(0, template.size() > 6 ? 6 : template.size())
                 .stream()
                 .map(string -> {
                     if(string.length() > 9) {
@@ -27,8 +30,9 @@ public class InventoryTemplate {
 
         EntryStream.of(template)
                 .forEach(entrySet -> {
-                    for(int i = 0; i < 9; i++) {
-                        this.templateMap.put(entrySet.getValue(), new Slot(entrySet.getKey() + 1, i + 1));
+                    System.out.println(entrySet.getKey() + " " + entrySet.getValue());
+                    for(int i = 0; i < entrySet.getValue().length(); i++) {
+                        this.templateMap.put(String.valueOf(entrySet.getValue().charAt(i)), new Slot(entrySet.getKey() + 1, i + 1));
                     }
                 });
     }
