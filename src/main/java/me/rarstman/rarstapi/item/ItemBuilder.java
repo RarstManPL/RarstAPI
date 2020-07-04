@@ -6,7 +6,6 @@ import me.rarstman.rarstapi.util.MinecraftUtil;
 import me.rarstman.rarstapi.util.NumberUtil;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -14,12 +13,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ItemBuilder {
@@ -164,7 +161,7 @@ public class ItemBuilder {
         return this.updateItemMeta();
     }
 
-    public ItemBuilder addPotionEffects(PotionEffect... potionEffects) {
+    public ItemBuilder addPotionEffects(final PotionEffect... potionEffects) {
         if (this.itemStack.getType() != Material.POTION && this.itemStack.getType() != Material.SPLASH_POTION && this.itemStack.getType() != Material.LINGERING_POTION) {
             return this;
         }
@@ -173,7 +170,7 @@ public class ItemBuilder {
         return this.updateItemMeta();
     }
 
-    public ItemBuilder addFlags(ItemFlag... itemFlags) {
+    public ItemBuilder addFlags(final ItemFlag... itemFlags) {
         this.itemMeta.addItemFlags(itemFlags);
         return this.updateItemMeta();
     }
@@ -189,7 +186,7 @@ public class ItemBuilder {
         return this.updateItemMeta();
     }
 
-    public ItemBuilder addEnchantments(Map<Enchantment, Integer> enchantments) {
+    public ItemBuilder addEnchantments(final Map<Enchantment, Integer> enchantments) {
         enchantments
                 .entrySet()
                 .stream()

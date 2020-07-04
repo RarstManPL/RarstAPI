@@ -1,11 +1,9 @@
 package me.rarstman.rarstapi.util;
 
-import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
-import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffectType;
 
 public class MinecraftUtil {
@@ -128,21 +126,11 @@ public class MinecraftUtil {
     }
 
     public static boolean isEnchantByKey(final String key) {
-        try {
-            Enchantment.getByKey(NamespacedKey.minecraft(key.toLowerCase()));
-        } catch (final NullPointerException exception) {
-            return false;
-        }
-        return true;
+        return Enchantment.getByKey(NamespacedKey.minecraft(key.toLowerCase())) != null;
     }
 
     public static boolean isEnchantByName(final String name) {
-        try {
-            Enchantment.getByName(name.toUpperCase());
-        } catch (final NullPointerException exception) {
-            return false;
-        }
-        return true;
+        return Enchantment.getByName(name.toUpperCase()) != null;
     }
 
     public static boolean isEnchant(final String key) {
@@ -154,12 +142,7 @@ public class MinecraftUtil {
     }
 
     public static boolean isPotionEffectTypeById(final int id) {
-        try {
-            PotionEffectType.getById(id);
-        } catch (final NullPointerException exception) {
-            return false;
-        }
-        return true;
+        return PotionEffectType.getById(id) != null;
     }
 
     public static boolean isPotionEffectTypeById(final String id) {
@@ -167,12 +150,7 @@ public class MinecraftUtil {
     }
 
     public static boolean isPotionEffectTypeByName(final String name) {
-        try {
-            PotionEffectType.getByName(name.toUpperCase());
-        } catch (final NullPointerException exception) {
-            return false;
-        }
-        return true;
+        return PotionEffectType.getByName(name.toUpperCase()) != null;
     }
 
     public static boolean isPotionEffectType(final String name) {

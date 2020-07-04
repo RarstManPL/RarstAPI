@@ -3,6 +3,8 @@ package me.rarstman.rarstapi.util;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class StringUtil {
 
@@ -21,9 +23,11 @@ public class StringUtil {
         return string;
     }
 
-    public static boolean equalsIgnoreCase(final String string, final String... strings){
-        return Arrays.stream(strings)
-                .anyMatch(str -> StringUtils.equalsIgnoreCase(string, str));
+    public static List<String> replace(final List<String> list, final String... replaces) {
+        return list
+                .stream()
+                .map(string -> replace(string, replaces))
+                .collect(Collectors.toList());
     }
 
 }

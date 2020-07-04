@@ -1,5 +1,7 @@
 package me.rarstman.rarstapi.command;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
@@ -11,7 +13,7 @@ import java.util.stream.Collectors;
 public class CommandManager {
 
     private static final Map<Class<? extends CommandProvider>, CommandProvider> commandsByClass = new HashMap<>();
-    private static final Map<JavaPlugin, CommandProvider> commandsByJavaPlugin = new HashMap<>();
+    private static final Multimap<JavaPlugin, CommandProvider> commandsByJavaPlugin = ArrayListMultimap.create();
 
     public static void registerCommand(final JavaPlugin javaPlugin, final CommandProvider command) {
         if(command.register() == null) {
@@ -32,10 +34,8 @@ public class CommandManager {
 
     public static Set<CommandProvider> getCommandsByJavaPlugin(final JavaPlugin javaPlugin) {
         return commandsByJavaPlugin
-                .entrySet()
+                .get(javaPlugin)
                 .stream()
-                .filter(entrySet -> entrySet.getKey() == javaPlugin)
-                .map(Map.Entry::getValue)
                 .collect(Collectors.toSet());
     }
 

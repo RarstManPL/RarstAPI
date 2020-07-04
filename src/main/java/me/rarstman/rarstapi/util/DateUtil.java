@@ -1,7 +1,5 @@
 package me.rarstman.rarstapi.util;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 import java.util.concurrent.TimeUnit;
