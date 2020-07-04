@@ -36,7 +36,7 @@ public class RarstAPIPlugin extends JavaPlugin {
         ReflectionManager.registerReflection(new CommandMapReflection());
 
         this.apiLogger.info("Registering command...");
-        CommandManager.registerCommand(new RarstAPICommand());
+        CommandManager.registerCommand(this, new RarstAPICommand());
 
         this.apiLogger.clearly(" ");
     }
