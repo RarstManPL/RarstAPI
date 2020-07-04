@@ -2,6 +2,8 @@ package me.rarstman.rarstapi.item;
 
 import me.rarstman.rarstapi.util.ColorUtil;
 import me.rarstman.rarstapi.util.DateUtil;
+import me.rarstman.rarstapi.util.MinecraftUtil;
+import me.rarstman.rarstapi.util.NumberUtil;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -14,10 +16,10 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ItemBuilder {
@@ -59,12 +61,14 @@ public class ItemBuilder {
             final String[] materialData = item[0].split(":");
             materialName = materialData[0].toUpperCase();
 
-            if (materialData.length > 1 && StringUtils.isNumeric(materialData[1])) {
-                durability = Integer.valueOf(materialData[1]) < 0 ? 0 : Short.valueOf(materialData[1]);
+            if (materialData.length > 1 && NumberUtil.isNumber(materialData[1])) {
+                durability = Integer.parseInt(materialData[1]) < 0 ? 0 : Short.parseShort(materialData[1]);
             }
         }
 
-        if (Material.valueOf(materialName) == null) {
+        try {
+            Material.valueOf(materialName);
+        } catch (final IllegalArgumentException exception) {
             this.itemStack = new ItemStack(Material.AIR);
             this.itemMeta = this.itemStack.getItemMeta();
             return;
@@ -72,8 +76,8 @@ public class ItemBuilder {
         final Material material = Material.valueOf(materialName);
         int amount = 1;
 
-        if (item.length > 1 && StringUtils.isNumeric(item[1])) {
-            amount = Integer.valueOf(item[1]) < 0 ? 1 : Integer.valueOf(item[1]);
+        if (item.length > 1 && NumberUtil.isNumber(item[1])) {
+            amount = Integer.parseInt(item[1]) < 0 ? 1 : Integer.parseInt(item[1]);
         }
         this.itemStack = new ItemStack(material, amount, durability);
         this.itemMeta = this.itemStack.getItemMeta();
@@ -83,8 +87,8 @@ public class ItemBuilder {
         }
 
         Arrays.stream(Arrays.copyOfRange(item, 2, item.length))
-                .filter(option -> option.split(":").length > 1)
-                .map(option -> option.split(":"))
+                .filter(option -> option.split(":", 2).length > 1)
+                .map(option -> option.split(":", 2))
                 .forEach(optionSplitted -> {
                     switch (optionSplitted[0].toLowerCase()) {
                         case "name": {
@@ -92,16 +96,10 @@ public class ItemBuilder {
                             break;
                         }
                         case "lore": {
-                            String[] loreSplitted = optionSplitted[1].split("|");
-                            List<String> lore = new ArrayList<>();
-                            Arrays.stream(loreSplitted)
-                                    .forEach(lr -> lore.add(StringUtils.join(lr.split("_"), " ")));
-                            /*Arrays.asList(optionSplitted[1].split("|"))
-                                    .stream()
-                                    .map(string -> StringUtils.join(string.split("_"), " "))
-                                    .collect(Collectors.toList())
-                                    .forEach(str -> System.out.println(str));*/
-                            this.setLore(lore);
+                            this.setLore(
+                                    Arrays.stream(optionSplitted[1].split("\\|"))
+                                            .map(string -> StringUtils.join(string.split("_"), " "))
+                                            .collect(Collectors.toList()));
                             break;
                         }
                         case "owner": {
@@ -110,10 +108,9 @@ public class ItemBuilder {
                         }
                         case "flags": {
                             this.addFlags(
-                                    Arrays.asList(optionSplitted[1].split(","))
-                                            .stream()
-                                            .filter(itemFlag -> ItemFlag.valueOf(itemFlag.toUpperCase()) != null)
-                                            .map(itemFlag -> ItemFlag.valueOf(itemFlag.toUpperCase()))
+                                    Arrays.stream(optionSplitted[1].split(","))
+                                            .filter(MinecraftUtil::isItemFlag)
+                                            .map(ItemFlag::valueOf)
                                             .toArray(ItemFlag[]::new)
                             );
                             break;
@@ -129,9 +126,9 @@ public class ItemBuilder {
                         case "potions": {
                             this.addPotionEffects(
                                     Arrays.stream(optionSplitted[1].split(","))
-                                            .map(potionData -> potionData.split("-"))
-                                            .filter(potionData -> PotionEffectType.getByName(potionData[0]) != null && StringUtils.isNumeric(potionData[2]))
-                                            .map(potionData -> new PotionEffect(PotionEffectType.getByName(potionData[0].toUpperCase()), ((Long) DateUtil.stringToMills(potionData[1])).intValue(), Integer.valueOf(potionData[2])))
+                                            .map(potionData -> potionData.split(":"))
+                                            .filter(potionData -> potionData.length > 2 && MinecraftUtil.isPotionEffectType(potionData[0]) && NumberUtil.isNumber(potionData[2]) && Integer.parseInt(potionData[2]) > 0)
+                                            .map(potionData -> new PotionEffect(MinecraftUtil.getPotionEffectType(potionData[0]), DateUtil.stringToTicks(potionData[1]), Integer.parseInt(potionData[2]) - 1))
                                             .toArray(PotionEffect[]::new)
                             );
                             break;
@@ -139,9 +136,9 @@ public class ItemBuilder {
                         case "enchants": {
                             this.addEnchantments(
                                     Arrays.stream(optionSplitted[1].split(","))
-                                            .map(enchantData -> enchantData.split("-"))
-                                            .filter(enchantData -> Enchantment.getByKey(NamespacedKey.minecraft(enchantData[0].toUpperCase())) != null && StringUtils.isNumeric(enchantData[1]))
-                                            .collect(Collectors.toMap(enchantData -> Enchantment.getByKey(NamespacedKey.minecraft(enchantData[0].toUpperCase())), enchantData -> Integer.valueOf(enchantData[1])))
+                                            .map(enchantData -> enchantData.split(":"))
+                                            .filter(enchantData -> enchantData.length > 1 && MinecraftUtil.isEnchant(enchantData[0]) && NumberUtil.isNumber(enchantData[1]) && Integer.parseInt(enchantData[1]) > 0)
+                                            .collect(Collectors.toMap(enchantData -> MinecraftUtil.getEnchant(enchantData[0]), enchantData -> Integer.parseInt(enchantData[1])))
                             );
                             break;
                         }
@@ -167,8 +164,8 @@ public class ItemBuilder {
         return this.updateItemMeta();
     }
 
-    public ItemBuilder addPotionEffects(final PotionEffect... potionEffects) {
-        if (this.itemStack.getType() != Material.POTION) {
+    public ItemBuilder addPotionEffects(PotionEffect... potionEffects) {
+        if (this.itemStack.getType() != Material.POTION && this.itemStack.getType() != Material.SPLASH_POTION && this.itemStack.getType() != Material.LINGERING_POTION) {
             return this;
         }
         Arrays.stream(potionEffects)
@@ -176,7 +173,7 @@ public class ItemBuilder {
         return this.updateItemMeta();
     }
 
-    public ItemBuilder addFlags(final ItemFlag... itemFlags) {
+    public ItemBuilder addFlags(ItemFlag... itemFlags) {
         this.itemMeta.addItemFlags(itemFlags);
         return this.updateItemMeta();
     }
@@ -187,15 +184,16 @@ public class ItemBuilder {
     }
 
     public ItemBuilder glowing() {
-        this.itemStack.addEnchantment(Enchantment.DURABILITY, 1);
+        this.itemMeta.addEnchant(Enchantment.DURABILITY, 0, true);
         this.itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         return this.updateItemMeta();
     }
 
-    public ItemBuilder addEnchantments(final Map<Enchantment, Integer> enchantments) {
+    public ItemBuilder addEnchantments(Map<Enchantment, Integer> enchantments) {
         enchantments
                 .entrySet()
-                .forEach(entrySet -> this.itemMeta.addEnchant(entrySet.getKey(), entrySet.getValue(), false));
+                .stream()
+                .forEach(entrySet -> this.itemMeta.addEnchant(entrySet.getKey(), entrySet.getValue(), true));
         return this.updateItemMeta();
     }
 

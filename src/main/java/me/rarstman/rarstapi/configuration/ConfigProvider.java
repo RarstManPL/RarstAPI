@@ -25,7 +25,7 @@ public abstract class ConfigProvider {
 
     private final File file;
     private final InputStream defaultConfig;
-    private YamlConfiguration yamlConfiguration;
+    private final YamlConfiguration yamlConfiguration;
 
     private final Logger logger;
 
@@ -157,14 +157,6 @@ public abstract class ConfigProvider {
                                                     this.yamlConfiguration.getString(configPath + ".Password"),
                                                     this.yamlConfiguration.getString(configPath + ".Base")
                                             );
-                                            break;
-                                        }
-                                        case SQLITE: {
-                                            if(!this.yamlConfiguration.isString(configPath + ".File")) {
-                                                this.logger.error("Incomplete database configuration data in file '" + this.file.getPath() + "', path '" + configPath + "'. Using default or last correctly parsed value...");
-                                                return;
-                                            }
-                                            databaseData = new DatabaseData(this.yamlConfiguration.getString(configPath + ".File"));
                                             break;
                                         }
                                     }

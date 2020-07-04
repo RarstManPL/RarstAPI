@@ -22,15 +22,12 @@ public @interface ParseValue {
     }
 
     enum MessageType {
-        ACTIONBAR,
         TITLE,
-        BOSSBAR,
         CHAT;
     }
 
     enum DatabaseType {
-        MYSQL,
-        SQLITE;
+        MYSQL;
     }
 
 }

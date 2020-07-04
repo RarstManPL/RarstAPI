@@ -8,23 +8,12 @@ public class DatabaseData {
     private final String password;
     private final String base;
 
-    private final String file;
-
-    public DatabaseData(final String host, final Integer port, final String user, final String password, final String base, final String file) {
+    public DatabaseData(final String host, final Integer port, final String user, final String password, final String base) {
         this.host = host;
         this.port = port;
         this.user = user;
         this.password = password;
         this.base = base;
-        this.file = file;
-    }
-
-    public DatabaseData(final String host, final int port, final String user, final String password, final String base) {
-        this(host, port, user, password, base, null);
-    }
-
-    public DatabaseData(final String file) {
-        this(null, null, null, null, null, file);
     }
 
     public String getHost() {
@@ -45,10 +34,6 @@ public class DatabaseData {
 
     public String getBase() {
         return this.base;
-    }
-
-    public String getFile() {
-        return this.file;
     }
 
 }

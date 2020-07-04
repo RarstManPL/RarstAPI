@@ -18,7 +18,7 @@ public class InventoryTemplate {
             return;
         }
         template = template
-                .subList(0, template.size() > 6 ? 6 : template.size())
+                .subList(0, Math.min(template.size(), 6))
                 .stream()
                 .map(string -> {
                     if(string.length() > 9) {

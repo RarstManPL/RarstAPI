@@ -11,11 +11,11 @@ public class DateUtil {
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 
     public static long stringToMills(final String string) {
-        if (StringUtils.isNumeric(string)) {
+        if (NumberUtil.isNumber(string)) {
             return Long.parseLong(string);
         }
 
-        if (string.length() < 2 || !StringUtils.isNumeric(string.substring(0, string.length() - 1))) {
+        if (string.length() < 2 || !NumberUtil.isNumber(string.substring(0, string.length() - 1))) {
             return 0L;
         }
         long time = Long.parseLong(string.substring(0, string.length() - 1));
@@ -51,6 +51,53 @@ public class DateUtil {
             }
             default: {
                 time = 0L;
+                break;
+            }
+        }
+        return time;
+    }
+
+    public static int stringToTicks(final String string) {
+        if (NumberUtil.isNumber(string)) {
+            return Integer.parseInt(string);
+        }
+
+        if (string.length() < 2 || !NumberUtil.isNumber(string.substring(0, string.length() - 1))) {
+            return 0;
+        }
+        int time = Integer.parseInt(string.substring(0, string.length() - 1));
+
+        switch (string.toLowerCase().charAt(string.length() - 1)) {
+            case 's': {
+                time *= 20;
+                break;
+            }
+            case 'm': {
+                time *= 1200;
+                break;
+            }
+            case 'h': {
+                time *= 72000;
+                break;
+            }
+            case 'd': {
+                time *= 1728000;
+                break;
+            }
+            case 'w': {
+                time *= 1209600;
+                break;
+            }
+            case 'o': {
+                time *= 51840000;
+                break;
+            }
+            case 'y': {
+                time *= 622080000;
+                break;
+            }
+            default: {
+                time = 0;
                 break;
             }
         }

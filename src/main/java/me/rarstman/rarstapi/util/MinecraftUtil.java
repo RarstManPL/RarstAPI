@@ -1,6 +1,12 @@
 package me.rarstman.rarstapi.util;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.NamespacedKey;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.potion.Potion;
+import org.bukkit.potion.PotionEffectType;
 
 public class MinecraftUtil {
 
@@ -110,6 +116,71 @@ public class MinecraftUtil {
             return this.thundering;
         }
 
+    }
+
+    public static boolean isItemFlag(final String string) {
+        try {
+            ItemFlag.valueOf(string.toUpperCase());
+        } catch (final IllegalArgumentException exception) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean isEnchantByKey(final String key) {
+        try {
+            Enchantment.getByKey(NamespacedKey.minecraft(key.toLowerCase()));
+        } catch (final NullPointerException exception) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean isEnchantByName(final String name) {
+        try {
+            Enchantment.getByName(name.toUpperCase());
+        } catch (final NullPointerException exception) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean isEnchant(final String key) {
+        return isEnchantByKey(key) || isEnchantByName(key);
+    }
+
+    public static Enchantment getEnchant(final String key) {
+        return isEnchantByName(key) ? Enchantment.getByName(key.toUpperCase()) : isEnchantByKey(key) ? Enchantment.getByKey(NamespacedKey.minecraft(key.toLowerCase())) : null;
+    }
+
+    public static boolean isPotionEffectTypeById(final int id) {
+        try {
+            PotionEffectType.getById(id);
+        } catch (final NullPointerException exception) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean isPotionEffectTypeById(final String id) {
+        return NumberUtil.isNumber(id) && isPotionEffectTypeById(Integer.parseInt(id));
+    }
+
+    public static boolean isPotionEffectTypeByName(final String name) {
+        try {
+            PotionEffectType.getByName(name.toUpperCase());
+        } catch (final NullPointerException exception) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean isPotionEffectType(final String name) {
+        return isPotionEffectTypeById(name) || isPotionEffectTypeByName(name);
+    }
+
+    public static PotionEffectType getPotionEffectType(final String name) {
+        return isPotionEffectTypeById(name) ? PotionEffectType.getById(Integer.parseInt(name)) : isPotionEffectTypeByName(name) ? PotionEffectType.getByName(name.toUpperCase()) : null;
     }
 
 }
