@@ -203,4 +203,8 @@ public class ItemBuilder {
         return this.itemStack;
     }
 
+    public ItemBuilder clone() {
+        return this.clone();
+    }
+
 }

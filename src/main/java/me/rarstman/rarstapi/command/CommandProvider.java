@@ -34,6 +34,10 @@ public abstract class CommandProvider extends Command {
     }
 
     public CommandProvider register() {
+        if(!this.enabled) {
+            return null;
+        }
+
         if(!CommandUtil.register(this)) {
             return null;
         }

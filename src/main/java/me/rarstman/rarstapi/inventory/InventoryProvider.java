@@ -10,6 +10,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -34,6 +35,10 @@ public abstract class InventoryProvider extends ListenerProvider {
     }
 
     public InventoryProvider setInventoryTemplate(final String... template) {
+        return this.setInventoryTemplate(new InventoryTemplate(template));
+    }
+
+    public InventoryProvider setInventoryTemplate(final List<String> template) {
         return this.setInventoryTemplate(new InventoryTemplate(template));
     }
 
