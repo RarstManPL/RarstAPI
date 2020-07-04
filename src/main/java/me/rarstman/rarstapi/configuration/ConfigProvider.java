@@ -1,15 +1,12 @@
 package me.rarstman.rarstapi.configuration;
 
 import me.rarstman.rarstapi.RarstAPIPlugin;
-import me.rarstman.rarstapi.command.CommandData;
 import me.rarstman.rarstapi.configuration.annotation.ConfigName;
+import me.rarstman.rarstapi.configuration.annotation.ParseDisabler;
 import me.rarstman.rarstapi.configuration.annotation.ParseValue;
-import me.rarstman.rarstapi.database.DatabaseData;
-import me.rarstman.rarstapi.item.ItemBuilder;
+import me.rarstman.rarstapi.configuration.customparser.CustomParser;
+import me.rarstman.rarstapi.configuration.customparser.exception.CustomParserException;
 import me.rarstman.rarstapi.logger.Logger;
-import me.rarstman.rarstapi.message.Message;
-import me.rarstman.rarstapi.message.impl.ChatMessage;
-import me.rarstman.rarstapi.message.impl.TitleMessage;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -67,7 +64,7 @@ public abstract class ConfigProvider {
         if(!this.checkFileAndLoad()){
             return false;
         }
-        final ParseValue parseValueClass = this.getClass().getAnnotation(ParseValue.class);
+        final ParseValue parseValueClass = this.getClass().isAnnotationPresent(ParseValue.class) ? this.getClass().getAnnotation(ParseValue.class) : null;
 
         Arrays.stream(this.getClass().getDeclaredFields())
                 .filter(field -> Modifier.isPublic(field.getModifiers()) && field.isAnnotationPresent(ConfigName.class))
@@ -79,14 +76,25 @@ public abstract class ConfigProvider {
                             this.logger.error("Value '" + configPath + "' in configuration '" + this.file.getPath() + "' isn't set. Using default or last correctly parsed value...");
                             return;
                         }
-
-                        if(field.getType().isEnum()) {
-
-                        }
-                        final ParseValue parseValue = field.isAnnotationPresent(ParseValue.class) ? field.getAnnotation(ParseValue.class).parseType() != ParseValue.ParseType.DISABLE ? field.getAnnotation(ParseValue.class) : null : parseValueClass != null ? parseValueClass : null;
+                        final ParseValue parseValue = field.isAnnotationPresent(ParseValue.class) ? !field.isAnnotationPresent(ParseDisabler.class) ? field.getAnnotation(ParseValue.class) : null : parseValueClass;
 
                         if (parseValue != null) {
-                            switch (parseValue.parseType()) {
+                            if (!ConfigManager.getCustomParser(parseValue.value()).isPresent()) {
+                                //ERROR
+                                return;
+                            }
+                            final CustomParser customParser = ConfigManager.getCustomParser(parseValue.value()).get();
+
+                            try {
+                                field.set(this, customParser.parse(this.getClass(), field, yamlConfiguration, configPath));
+                            } catch (final CustomParserException exception) {
+                                System.out.println(exception.getMessage());
+                                return;
+                            }
+                            return;
+                        }
+                        field.set(this, this.yamlConfiguration.get(configPath, field.get(this)));
+                            /*switch (parseValue.parseType()) {
                                 case MESSAGE: {
                                     if (!this.yamlConfiguration.isString(configPath)) {
                                         this.logger.error("Value '" + configPath + "' in configuration '" + this.file.getPath() + "' isn't string. Using default or last correctly parsed value... ");
@@ -162,11 +170,11 @@ public abstract class ConfigProvider {
                                     }
                                     field.set(this, databaseData);
                                     break;
+
                                 }
                             }
                             return;
-                        }
-                        field.set(this, this.yamlConfiguration.get(configPath, field.get(this)));
+                            */
                     } catch (final IllegalAccessException exception) {
                         this.logger.exception(exception, "Error while trying to set field '" + field.getName() + "' in configuration class '" + this.getClass().getName() + "'. Using default or last correctly parsed value...");
                     }

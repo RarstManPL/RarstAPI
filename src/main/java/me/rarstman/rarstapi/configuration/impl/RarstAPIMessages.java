@@ -3,13 +3,16 @@ package me.rarstman.rarstapi.configuration.impl;
 import me.rarstman.rarstapi.RarstAPIPlugin;
 import me.rarstman.rarstapi.configuration.ConfigProvider;
 import me.rarstman.rarstapi.configuration.annotation.ConfigName;
+import me.rarstman.rarstapi.configuration.annotation.ParseDisabler;
 import me.rarstman.rarstapi.configuration.annotation.ParseValue;
+import me.rarstman.rarstapi.configuration.customparser.impl.MessageParser;
 import me.rarstman.rarstapi.message.Message;
 import me.rarstman.rarstapi.message.impl.ChatMessage;
 
 import java.io.File;
 
-@ParseValue(parseType = ParseValue.ParseType.MESSAGE)
+@ParseValue(MessageParser.class)
+@MessageParser.ParseMessageData(MessageParser.MessageType.CHAT)
 public class RarstAPIMessages extends ConfigProvider {
 
     @ConfigName("NoPermission")
@@ -37,35 +40,35 @@ public class RarstAPIMessages extends ConfigProvider {
     public Message configurationNotCorrectlyReloaded = new ChatMessage("Plik konfiguracyjny nie został poprawnie przeładowany. Sprawdź konsolę");
 
     @ConfigName("True_")
-    @ParseValue(parseType = ParseValue.ParseType.DISABLE)
+    @ParseDisabler
     public String true_ = "tak";
 
     @ConfigName("False_")
-    @ParseValue(parseType = ParseValue.ParseType.DISABLE)
+    @ParseDisabler
     public String false_ = "nie";
 
     @ConfigName("On_")
-    @ParseValue(parseType = ParseValue.ParseType.DISABLE)
+    @ParseDisabler
     public String on_ = "włączony";
 
     @ConfigName("Off_")
-    @ParseValue(parseType = ParseValue.ParseType.DISABLE)
+    @ParseDisabler
     public String off_ = "wyłączony";
 
     @ConfigName("You")
-    @ParseValue(parseType = ParseValue.ParseType.DISABLE)
+    @ParseDisabler
     public String you = "ciebie";
 
     @ConfigName("Lack")
-    @ParseValue(parseType = ParseValue.ParseType.DISABLE)
+    @ParseDisabler
     public String lack = "brak";
 
     @ConfigName("LackInformation")
-    @ParseValue(parseType = ParseValue.ParseType.DISABLE)
+    @ParseDisabler
     public String lackInformation = "brak informacji";
 
     @ConfigName("Unknown")
-    @ParseValue(parseType = ParseValue.ParseType.DISABLE)
+    @ParseDisabler
     public String unknown = "nieznany";
 
     public RarstAPIMessages() {

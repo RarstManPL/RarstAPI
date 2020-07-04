@@ -58,7 +58,7 @@
         <dependency>
             <groupId>com.github.RarstManPL</groupId>
             <artifactId>AnvilGUI</artifactId>
-            <version>bebdb14ee5</version>
+            <version>ed933e53e5</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
