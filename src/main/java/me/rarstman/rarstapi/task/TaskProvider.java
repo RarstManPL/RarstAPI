@@ -8,6 +8,7 @@ public abstract class TaskProvider extends BukkitRunnable {
 
     protected final RarstAPIPlugin rarstAPIPlugin;
     protected final Logger logger;
+    private boolean once = false;
 
     public TaskProvider() {
         this.rarstAPIPlugin = RarstAPIPlugin.getAPI();
@@ -30,6 +31,15 @@ public abstract class TaskProvider extends BukkitRunnable {
             return;
         }
         this.onExecute();
+
+        if(this.once) {
+            this.disableTask();
+        }
+    }
+
+    public TaskProvider once() {
+        this.once = true;
+        return this;
     }
 
     public abstract void onDisable();

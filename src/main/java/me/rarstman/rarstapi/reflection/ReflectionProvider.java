@@ -13,6 +13,7 @@ public abstract class ReflectionProvider {
     }
 
     public ReflectionProvider hook() {
+
         try {
             this.initialize();
         } catch (final ReflectionInitializeException exception) {
