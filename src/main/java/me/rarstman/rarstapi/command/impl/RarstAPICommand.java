@@ -5,6 +5,8 @@ import me.rarstman.rarstapi.configuration.ConfigManager;
 import me.rarstman.rarstapi.configuration.impl.RarstAPIConfig;
 import org.bukkit.command.CommandSender;
 
+import java.util.List;
+
 public class RarstAPICommand extends CommandProvider {
 
     private final RarstAPIConfig config = ConfigManager.getConfig(RarstAPIConfig.class);
@@ -20,6 +22,11 @@ public class RarstAPICommand extends CommandProvider {
             return;
         }
         this.rarstAPIMessages.configurationReloaded.send(commandSender);
+    }
+
+    @Override
+    public List<String> onTabComplete(final CommandSender commandSender, final String alias, final String[] args) throws IllegalArgumentException {
+        return null;
     }
 
 }
