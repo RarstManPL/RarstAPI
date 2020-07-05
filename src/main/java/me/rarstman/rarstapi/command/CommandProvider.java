@@ -8,6 +8,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class CommandProvider extends Command {
@@ -49,6 +50,11 @@ public abstract class CommandProvider extends Command {
     }
 
     @Override
+    public String getPermission() {
+        return this.permission;
+    }
+
+    @Override
     public boolean execute(final CommandSender commandSender, final String label, final String[] args) {
         if(this.onlyPlayer && !(commandSender instanceof Player)) {
             this.rarstAPIMessages.onlyPlayer.send(commandSender);
@@ -63,6 +69,17 @@ public abstract class CommandProvider extends Command {
         return true;
     }
 
+    @Override
+    public List<String> tabComplete(final CommandSender commandSender, final String alias, final String[] args) throws IllegalArgumentException {
+        if(!PermissionUtil.hasPermission(commandSender, this.permission)) {
+            return new ArrayList<>();
+        }
+        final List<String> completions = this.onTabComplete(commandSender, alias, args);
+        return completions == null ? new ArrayList<>() : completions;
+    }
+
     public abstract void onExecute(final CommandSender commandSender, final String[] args);
+
+    public abstract List<String> onTabComplete(final CommandSender commandSender, final String alias, final String[] args) throws IllegalArgumentException;
 
 }
