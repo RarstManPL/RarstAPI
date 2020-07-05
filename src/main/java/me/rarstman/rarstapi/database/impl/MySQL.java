@@ -49,6 +49,9 @@ public class MySQL extends DatabaseProvider {
             this.logger.exception(exception, "Error while trying to test first database connection ('" + this.databaseData.getHost() + "', '" + this.databaseData.getPort() + "', '" + this.databaseData.getUser() + "', " + this.databaseData.getBase() + "'");
             throw new DatabaseInitializeException("Error while trying to test first database connection ('" + this.databaseData.getHost() + "', '" + this.databaseData.getPort() + "', '" + this.databaseData.getUser() + "', " + this.databaseData.getBase() + "'");
         }
+        this.tables
+                .stream()
+                .forEach(table -> this.query(table, true));
         this.logger.info("Database ('" + this.databaseData.getHost() + "', '" + this.databaseData.getPort() + "', '" + this.databaseData.getUser() + "', " + this.databaseData.getBase() + "') has been initialized.");
         return this;
     }

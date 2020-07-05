@@ -10,7 +10,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
@@ -18,6 +20,8 @@ public abstract class DatabaseProvider extends AsynchronouslyTask {
 
     protected final Logger logger;
     protected HikariDataSource hikariDataSource;
+
+    protected final List<String> tables = new ArrayList<>();
 
     private Connection connection;
     private BlockingQueue<String> queue = new ArrayBlockingQueue<>(1024);
@@ -86,7 +90,7 @@ public abstract class DatabaseProvider extends AsynchronouslyTask {
     }
 
     public DatabaseProvider createTable(final String table) {
-        this.query(table, true);
+        this.tables.add(table);
         return this;
     }
 
