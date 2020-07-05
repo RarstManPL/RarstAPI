@@ -3,10 +3,6 @@ package me.rarstman.rarstapi;
 import me.rarstman.rarstapi.command.CommandManager;
 import me.rarstman.rarstapi.command.impl.RarstAPICommand;
 import me.rarstman.rarstapi.configuration.ConfigManager;
-import me.rarstman.rarstapi.configuration.customparser.impl.CommandDataParser;
-import me.rarstman.rarstapi.configuration.customparser.impl.DatabaseDataParser;
-import me.rarstman.rarstapi.configuration.customparser.impl.ItemBuilderParser;
-import me.rarstman.rarstapi.configuration.customparser.impl.MessageParser;
 import me.rarstman.rarstapi.configuration.impl.RarstAPIConfig;
 import me.rarstman.rarstapi.configuration.impl.RarstAPIMessages;
 import me.rarstman.rarstapi.hook.HooksManager;
@@ -34,12 +30,6 @@ public class RarstAPIPlugin extends JavaPlugin {
         HooksManager.registerHook(new VaultHook());
 
         this.apiLogger.info("Registering configs...");
-        ConfigManager.registerCustomParsers(
-                new CommandDataParser(),
-                new DatabaseDataParser(),
-                new ItemBuilderParser(),
-                new MessageParser()
-        );
         ConfigManager.registerConfigs(new RarstAPIConfig(), new RarstAPIMessages());
 
         this.apiLogger.info("Registering reflections...");

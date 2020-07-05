@@ -44,7 +44,7 @@ public abstract class DatabaseProvider extends AsynchronouslyTask {
         }
 
         try {
-            if (this.connection.isClosed() || this.connection == null) {
+            if (this.connection == null || this.connection.isClosed()) {
                 this.connection = hikariDataSource.getConnection();
             }
         } catch (final SQLException exception) {

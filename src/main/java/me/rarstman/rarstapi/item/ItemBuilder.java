@@ -37,8 +37,12 @@ public class ItemBuilder {
     }
 
     public ItemBuilder(final ItemStack itemStack){
+        this(itemStack, itemStack.getItemMeta());
+    }
+
+    public ItemBuilder(final ItemStack itemStack, final ItemMeta itemMeta) {
         this.itemStack = itemStack;
-        this.itemMeta = this.itemStack.getItemMeta();
+        this.itemMeta = itemMeta;
     }
 
     public ItemBuilder(final String stringItem) {
@@ -204,7 +208,7 @@ public class ItemBuilder {
     }
 
     public ItemBuilder clone() {
-        return this.clone();
+        return new ItemBuilder(this.itemStack, this.itemMeta);
     }
 
 }

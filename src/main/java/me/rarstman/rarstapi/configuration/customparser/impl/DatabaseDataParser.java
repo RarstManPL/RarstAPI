@@ -6,27 +6,31 @@ import me.rarstman.rarstapi.configuration.customparser.exception.CustomParserExc
 import me.rarstman.rarstapi.database.DatabaseData;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.io.File;
 import java.lang.reflect.Field;
 
-public class DatabaseDataParser implements CustomParser<DatabaseData> {
+public class DatabaseDataParser extends CustomParser<DatabaseData> {
+
+    public DatabaseDataParser(final Class<? extends ConfigProvider> configClass, final Field field, final File configFile, final YamlConfiguration yamlConfiguration, final String configPath) {
+        super(configClass, field, configFile, yamlConfiguration, configPath);
+    }
 
     @Override
-    public DatabaseData parse(final Class<? extends ConfigProvider> configClass, final Field field, final YamlConfiguration yamlConfiguration, final String configPath) throws CustomParserException {
-        if(!yamlConfiguration.isString(configPath + ".Host")
-                || !yamlConfiguration.isInt(configPath + ".Port")
-                || !yamlConfiguration.isString(configPath + ".User")
-                || !yamlConfiguration.isString(configPath + ".Password")
-                || !yamlConfiguration.isString(configPath + ".Base")) {
-            throw new CustomParserException("EXC");
+    public DatabaseData parse() throws CustomParserException {
+        if(!this.yamlConfiguration.isString(this.configPath + ".Host")
+                || !this.yamlConfiguration.isInt(this.configPath + ".Port")
+                || !this.yamlConfiguration.isString(this.configPath + ".User")
+                || !this.yamlConfiguration.isString(this.configPath + ".Password")
+                || !this.yamlConfiguration.isString(this.configPath + ".Base")) {
+            throw new CustomParserException("Incomplete database configuration data in file '" + this.configFile.getPath() + "', path '" + this.configPath + "'. Using default or last correctly parsed value...");
         }
         return new DatabaseData(
-                yamlConfiguration.getString(configPath + ".Host"),
-                yamlConfiguration.getInt(configPath + ".Port"),
-                yamlConfiguration.getString(configPath + ".User"),
-                yamlConfiguration.getString(configPath + ".Password"),
-                yamlConfiguration.getString(configPath + ".Base")
+                this.yamlConfiguration.getString(this.configPath + ".Host"),
+                this.yamlConfiguration.getInt(this.configPath + ".Port"),
+                this.yamlConfiguration.getString(this.configPath + ".User"),
+                this.yamlConfiguration.getString(this.configPath + ".Password"),
+                this.yamlConfiguration.getString(this.configPath + ".Base")
         );
-
     }
 
 }

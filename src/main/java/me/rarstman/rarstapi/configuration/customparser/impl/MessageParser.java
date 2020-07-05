@@ -8,25 +8,30 @@ import me.rarstman.rarstapi.message.impl.ChatMessage;
 import me.rarstman.rarstapi.message.impl.TitleMessage;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.io.File;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 
-public class MessageParser implements CustomParser<Message> {
+public class MessageParser extends CustomParser<Message> {
+
+    public MessageParser(final Class<? extends ConfigProvider> configClass, final Field field, final File configFile, final YamlConfiguration yamlConfiguration, final String configPath) {
+        super(configClass, field, configFile, yamlConfiguration, configPath);
+    }
 
     @Override
-    public Message parse(final Class<? extends ConfigProvider> configClass, final Field field, final YamlConfiguration yamlConfiguration, final String configPath) throws CustomParserException {
-        final ParseMessageData parseMessageData = field.isAnnotationPresent(ParseMessageData.class) ? field.getAnnotation(ParseMessageData.class) : configClass.isAnnotationPresent(ParseMessageData.class) ? configClass.getAnnotation(ParseMessageData.class) : null;
+    public Message parse() throws CustomParserException {
+        final ParseMessageData parseMessageData = this.field.isAnnotationPresent(ParseMessageData.class) ? this.field.getAnnotation(ParseMessageData.class) : this.configClass.isAnnotationPresent(ParseMessageData.class) ? this.configClass.getAnnotation(ParseMessageData.class) : null;
         if(parseMessageData == null) {
-            throw new CustomParserException("EXC");
+            throw new CustomParserException("Value '" + this.configPath + "' in configuration '" + this.configFile.getPath() + "' cannot be parsed due to lack of message type definition. Using default or last correctly parsed value...");
         }
 
-        if (!yamlConfiguration.isString(configPath)) {
-            throw new CustomParserException("XD");
+        if (!this.yamlConfiguration.isString(this.configPath)) {
+            throw new CustomParserException("Value '" + this.configPath + "' in configuration '" + this.configFile.getPath() + "' isn't string. Using default or last correctly parsed value... ");
         }
-        final String string = yamlConfiguration.getString(configPath);
+        final String string = this.yamlConfiguration.getString(this.configPath);
         Message message;
 
         switch (parseMessageData.value()) {

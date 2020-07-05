@@ -4,7 +4,6 @@ import me.rarstman.rarstapi.RarstAPIPlugin;
 import me.rarstman.rarstapi.configuration.annotation.ConfigName;
 import me.rarstman.rarstapi.configuration.annotation.ParseDisabler;
 import me.rarstman.rarstapi.configuration.annotation.ParseValue;
-import me.rarstman.rarstapi.configuration.customparser.CustomParser;
 import me.rarstman.rarstapi.configuration.customparser.exception.CustomParserException;
 import me.rarstman.rarstapi.logger.Logger;
 import org.apache.commons.io.FileUtils;
@@ -15,6 +14,8 @@ import org.yaml.snakeyaml.parser.ParserException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 
@@ -76,105 +77,19 @@ public abstract class ConfigProvider {
                             this.logger.error("Value '" + configPath + "' in configuration '" + this.file.getPath() + "' isn't set. Using default or last correctly parsed value...");
                             return;
                         }
-                        final ParseValue parseValue = field.isAnnotationPresent(ParseValue.class) ? !field.isAnnotationPresent(ParseDisabler.class) ? field.getAnnotation(ParseValue.class) : null : parseValueClass;
+                        final ParseValue parseValue = field.isAnnotationPresent(ParseDisabler.class) ? null : field.isAnnotationPresent(ParseValue.class) ? field.getAnnotation(ParseValue.class) : parseValueClass;
 
                         if (parseValue != null) {
-                            if (!ConfigManager.getCustomParser(parseValue.value()).isPresent()) {
-                                //ERROR
-                                return;
-                            }
-                            final CustomParser customParser = ConfigManager.getCustomParser(parseValue.value()).get();
-
                             try {
-                                field.set(this, customParser.parse(this.getClass(), field, yamlConfiguration, configPath));
+                                field.set(this, parseValue.value().getDeclaredConstructor(Class.class, Field.class, File.class, YamlConfiguration.class, String.class).newInstance(this.getClass(), field, this.file, this.yamlConfiguration, configPath).parse());
+                            } catch (final NoSuchMethodException | InstantiationException | InvocationTargetException exception) {
+                                this.logger.exception(exception, "Error while trying to parse value '" + configPath + "' in configuration '" + this.file.getPath() + "'. Using default or last correctly parsed value...");
                             } catch (final CustomParserException exception) {
-                                System.out.println(exception.getMessage());
-                                return;
+                                this.logger.error(exception.getMessage());
                             }
                             return;
                         }
                         field.set(this, this.yamlConfiguration.get(configPath, field.get(this)));
-                            /*switch (parseValue.parseType()) {
-                                case MESSAGE: {
-                                    if (!this.yamlConfiguration.isString(configPath)) {
-                                        this.logger.error("Value '" + configPath + "' in configuration '" + this.file.getPath() + "' isn't string. Using default or last correctly parsed value... ");
-                                        return;
-                                    }
-                                    final String string = this.yamlConfiguration.getString(configPath);
-                                    Message message;
-
-                                    switch (parseValue.messageType()) {
-                                        default:
-                                        case CHAT: {
-                                            message = new ChatMessage(string);
-                                            break;
-                                        }
-                                        case TITLE: {
-                                            message = new TitleMessage(string);
-                                            break;
-                                        }
-
-                                    }
-                                    field.set(this, message);
-                                    break;
-                                }
-                                case ITEMBUILDER: {
-                                    if (!this.yamlConfiguration.isString(configPath)) {
-                                        this.logger.error("Value '" + configPath + "' in configuration '" + this.file.getPath() + "' isn't string. Using default or correctly parsed value... ");
-                                        return;
-                                    }
-                                    field.set(this, new ItemBuilder(this.yamlConfiguration.getString(configPath)));
-                                    break;
-                                }
-                                case COMMANDDATA: {
-                                    if(!this.yamlConfiguration.isString(configPath + ".Name")
-                                            || !this.yamlConfiguration.isList(configPath + ".Aliases")
-                                            || !this.yamlConfiguration.isString(configPath + ".Usage")
-                                            || !this.yamlConfiguration.isString(configPath + ".Description")
-                                            || !this.yamlConfiguration.isBoolean(configPath + ".Enabled")) {
-                                        this.logger.error("Incomplete command configuration data in file '" + this.file.getPath() + "', path '" + configPath + "'. Using default or last correctly parsed value...");
-                                        return;
-                                    }
-                                    field.set(this, new CommandData(
-                                            this.yamlConfiguration.getString(configPath + ".Name"),
-                                            this.yamlConfiguration.getStringList(configPath + ".Aliases"),
-                                            this.yamlConfiguration.getString(configPath + ".Description"),
-                                            this.yamlConfiguration.getString(configPath + ".Usage"),
-                                            this.yamlConfiguration.getBoolean(configPath + ".Enabled")
-                                    ));
-                                    break;
-                                }
-                                case DATABASEDATA: {
-                                    DatabaseData databaseData;
-
-                                    switch (parseValue.databaseType()) {
-                                        default:
-                                        case MYSQL: {
-                                            if(!this.yamlConfiguration.isString(configPath + ".Host")
-                                                    || !this.yamlConfiguration.isInt(configPath + ".Port")
-                                                    || !this.yamlConfiguration.isString(configPath + ".User")
-                                                    || !this.yamlConfiguration.isString(configPath + ".Password")
-                                                    || !this.yamlConfiguration.isString(configPath + ".Base")) {
-                                                this.logger.error("Incomplete database configuration data in file '" + this.file.getPath() + "', path '" + configPath + "'. Using default or last correctly parsed value...");
-                                                return;
-                                            }
-                                            databaseData = new DatabaseData(
-                                                    this.yamlConfiguration.getString(configPath + ".Host"),
-                                                    this.yamlConfiguration.getInt(configPath + ".Port"),
-                                                    this.yamlConfiguration.getString(configPath + ".User"),
-                                                    this.yamlConfiguration.getString(configPath + ".Password"),
-                                                    this.yamlConfiguration.getString(configPath + ".Base")
-                                            );
-                                            break;
-                                        }
-                                    }
-                                    field.set(this, databaseData);
-                                    break;
-
-                                }
-                            }
-                            return;
-                            */
                     } catch (final IllegalAccessException exception) {
                         this.logger.exception(exception, "Error while trying to set field '" + field.getName() + "' in configuration class '" + this.getClass().getName() + "'. Using default or last correctly parsed value...");
                     }

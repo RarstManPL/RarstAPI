@@ -6,16 +6,21 @@ import me.rarstman.rarstapi.configuration.customparser.exception.CustomParserExc
 import me.rarstman.rarstapi.item.ItemBuilder;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.io.File;
 import java.lang.reflect.Field;
 
-public class ItemBuilderParser implements CustomParser<ItemBuilder> {
+public class ItemBuilderParser extends CustomParser<ItemBuilder> {
+
+    public ItemBuilderParser(final Class<? extends ConfigProvider> configClass, final Field field, final File configFile, final YamlConfiguration yamlConfiguration, final String configPath) {
+        super(configClass, field, configFile, yamlConfiguration, configPath);
+    }
 
     @Override
-    public ItemBuilder parse(final Class<? extends ConfigProvider> configClass, final Field field, final YamlConfiguration yamlConfiguration, final String configPath) throws CustomParserException {
-        if (!yamlConfiguration.isString(configPath)) {
-            throw new CustomParserException("EXC");
+    public ItemBuilder parse() throws CustomParserException {
+        if (!this.yamlConfiguration.isString(this.configPath)) {
+            throw new CustomParserException("Value '" + this.configPath + "' in configuration '" + this.configFile.getPath() + "' isn't string. Using default or correctly parsed value... ");
         }
-        return new ItemBuilder(yamlConfiguration.getString(configPath));
+        return new ItemBuilder(this.yamlConfiguration.getString(this.configPath));
     }
 
 }
