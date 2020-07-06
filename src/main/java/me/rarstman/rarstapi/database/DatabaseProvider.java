@@ -25,30 +25,27 @@ public abstract class DatabaseProvider extends AsynchronouslyTask {
 
     private Connection connection;
     private BlockingQueue<String> queue = new ArrayBlockingQueue<>(1024);
-    private boolean disablingQueue = false;
+    private boolean databaseDisabling = false;
+    private boolean queueDisabled = false;
 
     public DatabaseProvider() {
         this.logger = RarstAPIPlugin.getAPI().getAPILogger();
         this.register();
     }
 
-    public void disableDatabase(final String... queries) {
-        this.disablingQueue = true;
-        this.hikariDataSource.close();
-        if(queries != null) {
-            Arrays.stream(queries)
-                    .forEach(query -> this.query(query, false));
-        }
-        this.disableTask();
-        this.logger.info("Disabled database with jdbc url '" + this.hikariDataSource.getJdbcUrl() + "'.");
-    }
-
-    public void disableDatabase(final List<String> queries) {
-        this.disableDatabase(queries.stream().toArray(String[]::new));
-    }
-
     public void disableDatabase() {
-        this.disableDatabase((String) null);
+        this.databaseDisabling = true;
+        this.disableTask();
+
+        try {
+            this.connection.close();
+        } catch (final SQLException ignored) {}
+
+        while (!this.queueDisabled) {
+        }
+
+        this.hikariDataSource.close();
+        this.logger.info("Disabled database with jdbc url '" + this.hikariDataSource.getJdbcUrl() + "'.");
     }
 
     public Connection getConnection() {
@@ -125,6 +122,10 @@ public abstract class DatabaseProvider extends AsynchronouslyTask {
 
     @Override
     public void onExecute() {
+        if(this.databaseDisabling) {
+            return;
+        }
+
         if(this.getConnection() == null) {
             this.logger.error("Cannot execute query for database with jdbc url '" + this.hikariDataSource.getJdbcUrl() + "' due to connection's null.");
             return;
@@ -168,6 +169,7 @@ public abstract class DatabaseProvider extends AsynchronouslyTask {
         } catch (final SQLException exception) {
             this.logger.exception(exception, "Error while trying to execute batch for database with jdbc url '" + this.hikariDataSource.getJdbcUrl() + "'.");
         }
+        this.queueDisabled = true;
     }
 
     public abstract DatabaseProvider initialize() throws DatabaseInitializeException;
