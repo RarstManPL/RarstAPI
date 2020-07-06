@@ -25,16 +25,30 @@ public abstract class DatabaseProvider extends AsynchronouslyTask {
 
     private Connection connection;
     private BlockingQueue<String> queue = new ArrayBlockingQueue<>(1024);
+    private boolean disablingQueue = false;
 
     public DatabaseProvider() {
         this.logger = RarstAPIPlugin.getAPI().getAPILogger();
         this.register();
     }
 
-    public void disableDatabase() {
-        this.disableTask();
+    public void disableDatabase(final String... queries) {
+        this.disablingQueue = true;
         this.hikariDataSource.close();
+        if(queries != null) {
+            Arrays.stream(queries)
+                    .forEach(query -> this.query(query, false));
+        }
+        this.disableTask();
         this.logger.info("Disabled database with jdbc url '" + this.hikariDataSource.getJdbcUrl() + "'.");
+    }
+
+    public void disableDatabase(final List<String> queries) {
+        this.disableDatabase(queries.stream().toArray(String[]::new));
+    }
+
+    public void disableDatabase() {
+        this.disableDatabase((String) null);
     }
 
     public Connection getConnection() {
@@ -54,13 +68,14 @@ public abstract class DatabaseProvider extends AsynchronouslyTask {
         return this.connection;
     }
 
-    public void query(String string, boolean now) {
-        if(this.getConnection() == null) {
-            this.logger.error("Cannot execute query '" + string + "' for database with jdbc url '" + this.hikariDataSource.getJdbcUrl() + "' due to connection's null.");
-            return;
-        }
+    public void query(final String string, final boolean now) {
         if(!now) {
             this.queue.add(string);
+            return;
+        }
+
+        if(this.getConnection() == null) {
+            this.logger.error("Cannot execute query '" + string + "' for database with jdbc url '" + this.hikariDataSource.getJdbcUrl() + "' due to connection's null.");
             return;
         }
 
@@ -73,7 +88,7 @@ public abstract class DatabaseProvider extends AsynchronouslyTask {
         }
     }
 
-    public ResultSet select(String string) {
+    public ResultSet select(final String string) {
         if(this.getConnection() == null) {
             this.logger.error("Cannot execute select '" + string + "' for database with jdbc url '" + this.hikariDataSource.getJdbcUrl() + "' due to connection's null.");
             return null;
@@ -110,13 +125,13 @@ public abstract class DatabaseProvider extends AsynchronouslyTask {
 
     @Override
     public void onExecute() {
+        if(this.getConnection() == null) {
+            this.logger.error("Cannot execute query for database with jdbc url '" + this.hikariDataSource.getJdbcUrl() + "' due to connection's null.");
+            return;
+        }
+
         try {
             final String stringQueue = this.queue.take();
-
-            if(this.getConnection() == null) {
-                this.logger.error("Cannot execute query '" + stringQueue + "' for database with jdbc url '" + this.hikariDataSource.getJdbcUrl() + "' due to connection's null.");
-                return;
-            }
 
             try {
                 final Statement statement = this.getConnection().createStatement();
