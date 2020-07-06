@@ -9,6 +9,7 @@ public abstract class TaskProvider extends BukkitRunnable {
     protected final RarstAPIPlugin rarstAPIPlugin;
     protected final Logger logger;
     private boolean once = false;
+    private boolean disabled = false;
 
     public TaskProvider() {
         this.rarstAPIPlugin = RarstAPIPlugin.getAPI();
@@ -18,11 +19,12 @@ public abstract class TaskProvider extends BukkitRunnable {
     public void disableTask() {
         this.cancel();
         this.onDisable();
+        this.disabled = true;
         this.logger.info("Disabled task '" + this.getTaskId() + "'.");
     }
 
     protected void checkAndRun() {
-        if(this.isCancelled()) {
+        if(this.disabled) {
             return;
         }
 
@@ -40,6 +42,10 @@ public abstract class TaskProvider extends BukkitRunnable {
     public TaskProvider once() {
         this.once = true;
         return this;
+    }
+
+    public boolean isDisabled() {
+        return this.disabled;
     }
 
     public abstract void onDisable();

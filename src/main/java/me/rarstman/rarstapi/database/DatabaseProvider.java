@@ -26,7 +26,6 @@ public abstract class DatabaseProvider extends AsynchronouslyTask {
     private Connection connection;
     private BlockingQueue<String> queue = new ArrayBlockingQueue<>(1024);
     private boolean databaseDisabling = false;
-    private boolean queueDisabled = false;
 
     public DatabaseProvider() {
         this.logger = RarstAPIPlugin.getAPI().getAPILogger();
@@ -41,7 +40,7 @@ public abstract class DatabaseProvider extends AsynchronouslyTask {
             this.connection.close();
         } catch (final SQLException ignored) {}
 
-        while (!this.queueDisabled) {
+        while (!this.isDisabled()) {
         }
 
         this.hikariDataSource.close();
@@ -169,7 +168,6 @@ public abstract class DatabaseProvider extends AsynchronouslyTask {
         } catch (final SQLException exception) {
             this.logger.exception(exception, "Error while trying to execute batch for database with jdbc url '" + this.hikariDataSource.getJdbcUrl() + "'.");
         }
-        this.queueDisabled = true;
     }
 
     public abstract DatabaseProvider initialize() throws DatabaseInitializeException;
