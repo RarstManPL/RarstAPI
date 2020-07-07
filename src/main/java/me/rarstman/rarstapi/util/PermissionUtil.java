@@ -4,6 +4,7 @@ import me.rarstman.rarstapi.hook.HooksManager;
 import me.rarstman.rarstapi.hook.impl.VaultHook;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -21,6 +22,34 @@ public class PermissionUtil {
 
     public static boolean hasPermission(final OfflinePlayer offlinePlayer, final String permission) {
         return permission == null || permissionProvider != null && permissionProvider.playerHas(null, offlinePlayer, permission);
+    }
+
+    public String getPrimaryGroup(final Player player) {
+        return permissionProvider == null ? null : permissionProvider.getPrimaryGroup(player);
+    }
+
+    public String getPrimaryGroup(final OfflinePlayer offlinePlayer) {
+        return permissionProvider == null ? null : permissionProvider.getPrimaryGroup(null, offlinePlayer);
+    }
+
+    public String[] getGroups(final Player player) {
+        return permissionProvider == null ? null : permissionProvider.getPlayerGroups(player);
+    }
+
+    public String[] getGroups(final OfflinePlayer offlinePlayer) {
+        return permissionProvider == null ? null : permissionProvider.getPlayerGroups(null, offlinePlayer);
+    }
+
+    public boolean inGroup(final Player player, final String group) {
+        return permissionProvider != null && permissionProvider.playerInGroup(player, group);
+    }
+
+    public boolean inGroup(final OfflinePlayer offlinePlayer, final String group) {
+        return permissionProvider != null && permissionProvider.playerInGroup(null, offlinePlayer, group);
+    }
+
+    public boolean hasGroupPermission(final String group, final String permission) {
+        return permission == null || permissionProvider != null && permissionProvider.groupHas((World) null, group, permission);
     }
 
 }

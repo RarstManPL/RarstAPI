@@ -10,6 +10,7 @@ import me.rarstman.rarstapi.hook.impl.VaultHook;
 import me.rarstman.rarstapi.logger.Logger;
 import me.rarstman.rarstapi.reflection.ReflectionManager;
 import me.rarstman.rarstapi.reflection.impl.CommandMapReflection;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class RarstAPIPlugin extends JavaPlugin {
@@ -24,6 +25,12 @@ public class RarstAPIPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        try {
+            Bukkit.getPlayer((String) null).getName();
+        } catch (final IllegalArgumentException | NullPointerException exception) {
+            this.apiLogger.exception(exception, "Test exception");
+        }
+
         this.apiLogger.clearly(" ");
 
         this.apiLogger.info("Registering hooks...");

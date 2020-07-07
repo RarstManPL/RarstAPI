@@ -30,7 +30,7 @@ public class Logger {
 
     public void exception(final Exception exception, final String message){
         this.error(" ");
-        this.error("An exception occured");
+        this.error("An exception occurred");
         this.error(" ");
         this.error("Informations:");
         this.error(" > Java version: " + System.getProperty("java.version"));

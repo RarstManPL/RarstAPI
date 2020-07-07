@@ -30,7 +30,6 @@ public class InventoryTemplate {
 
         EntryStream.of(template)
                 .forEach(entrySet -> {
-                    System.out.println(entrySet.getKey() + " " + entrySet.getValue());
                     for(int i = 0; i < entrySet.getValue().length(); i++) {
                         this.templateMap.put(String.valueOf(entrySet.getValue().charAt(i)), new Slot(entrySet.getKey() + 1, i + 1));
                     }
