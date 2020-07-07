@@ -24,31 +24,31 @@ public class PermissionUtil {
         return permission == null || permissionProvider != null && permissionProvider.playerHas(null, offlinePlayer, permission);
     }
 
-    public String getPrimaryGroup(final Player player) {
+    public static String getPrimaryGroup(final Player player) {
         return permissionProvider == null ? null : permissionProvider.getPrimaryGroup(player);
     }
 
-    public String getPrimaryGroup(final OfflinePlayer offlinePlayer) {
+    public static String getPrimaryGroup(final OfflinePlayer offlinePlayer) {
         return permissionProvider == null ? null : permissionProvider.getPrimaryGroup(null, offlinePlayer);
     }
 
-    public String[] getGroups(final Player player) {
+    public static String[] getGroups(final Player player) {
         return permissionProvider == null ? null : permissionProvider.getPlayerGroups(player);
     }
 
-    public String[] getGroups(final OfflinePlayer offlinePlayer) {
+    public static String[] getGroups(final OfflinePlayer offlinePlayer) {
         return permissionProvider == null ? null : permissionProvider.getPlayerGroups(null, offlinePlayer);
     }
 
-    public boolean inGroup(final Player player, final String group) {
+    public static boolean inGroup(final Player player, final String group) {
         return permissionProvider != null && permissionProvider.playerInGroup(player, group);
     }
 
-    public boolean inGroup(final OfflinePlayer offlinePlayer, final String group) {
+    public static boolean inGroup(final OfflinePlayer offlinePlayer, final String group) {
         return permissionProvider != null && permissionProvider.playerInGroup(null, offlinePlayer, group);
     }
 
-    public boolean hasGroupPermission(final String group, final String permission) {
+    public static boolean hasGroupPermission(final String group, final String permission) {
         return permission == null || permissionProvider != null && permissionProvider.groupHas((World) null, group, permission);
     }
 
