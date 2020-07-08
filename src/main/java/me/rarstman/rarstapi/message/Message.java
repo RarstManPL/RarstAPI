@@ -4,6 +4,7 @@ import me.rarstman.rarstapi.util.ColorUtil;
 import me.rarstman.rarstapi.util.PermissionUtil;
 import me.rarstman.rarstapi.util.StringUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -35,6 +36,13 @@ public abstract class Message  {
                 .stream()
                 .filter(player -> PermissionUtil.hasPermission(player, permission))
                 .forEach(player -> this.send(player, replaces));
+    }
+
+    public void send(final OfflinePlayer offlinePlayer, final String... replaces) {
+        if(!offlinePlayer.isOnline()) {
+            return;
+        }
+        this.send(offlinePlayer.getPlayer(), replaces);
     }
 
     public String getMessage() {

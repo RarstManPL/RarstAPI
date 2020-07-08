@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public abstract class CommandProvider extends Command {
 
@@ -74,8 +75,11 @@ public abstract class CommandProvider extends Command {
         if(!PermissionUtil.hasPermission(commandSender, this.permission)) {
             return new ArrayList<>();
         }
-        final List<String> completions = this.onTabComplete(commandSender, alias, args);
-        return completions == null ? new ArrayList<>() : completions;
+        final List<String> completions = this.onTabComplete(commandSender, alias, args)
+                .stream()
+                .filter(string -> string.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
+                .collect(Collectors.toList());
+        return completions == null || completions.isEmpty() ? new ArrayList<>() : completions;
     }
 
     public abstract void onExecute(final CommandSender commandSender, final String[] args);
