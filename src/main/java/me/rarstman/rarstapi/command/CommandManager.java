@@ -41,9 +41,10 @@ public class CommandManager {
     }
 
     public static boolean isCommandByJavaPlugin(final JavaPlugin javaPlugin, final String name) {
+        final String name1 = name.startsWith("/") ? name.substring(1) : name;
         return getCommandsByJavaPlugin(javaPlugin)
                 .stream()
-                .anyMatch(command -> command.getName().equalsIgnoreCase(name) || StringUtil.containsIgnoreCase(command.getAliases(), name));
+                .anyMatch(command -> command.getName().equalsIgnoreCase(name1) || StringUtil.containsIgnoreCase(command.getAliases(), name1));
     }
 
 }

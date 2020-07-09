@@ -5,14 +5,17 @@ import me.rarstman.rarstapi.command.CommandProvider;
 import me.rarstman.rarstapi.logger.Logger;
 import me.rarstman.rarstapi.reflection.ReflectionManager;
 import me.rarstman.rarstapi.reflection.impl.CommandMapReflection;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
+import org.bukkit.help.HelpMap;
 
 import java.util.Arrays;
 
 public class CommandUtil {
 
     private static final CommandMap commandMap = ReflectionManager.getReflection(CommandMapReflection.class) == null ? null : ReflectionManager.getReflection(CommandMapReflection.class).getCommandMap();
+    private static final HelpMap helpMap = Bukkit.getHelpMap();
     private static final Logger logger = RarstAPIPlugin.getAPI().getAPILogger();
 
     public static boolean register(final CommandProvider commandProvider) {
@@ -47,6 +50,10 @@ public class CommandUtil {
     public static void register(final Command... commands) {
         Arrays.stream(commands)
                 .forEach(CommandUtil::register);
+    }
+
+    public static boolean isCommand(final String name) {
+        return helpMap.getHelpTopic(name.startsWith("/") ? name : "/" + name) != null;
     }
 
 }
