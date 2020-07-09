@@ -2,6 +2,7 @@ package me.rarstman.rarstapi.command;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import me.rarstman.rarstapi.util.StringUtil;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
@@ -37,6 +38,12 @@ public class CommandManager {
                 .get(javaPlugin)
                 .stream()
                 .collect(Collectors.toSet());
+    }
+
+    public static boolean isCommandByJavaPlugin(final JavaPlugin javaPlugin, final String name) {
+        return getCommandsByJavaPlugin(javaPlugin)
+                .stream()
+                .anyMatch(command -> command.getName().equalsIgnoreCase(name) || StringUtil.containsIgnoreCase(command.getAliases(), name));
     }
 
 }

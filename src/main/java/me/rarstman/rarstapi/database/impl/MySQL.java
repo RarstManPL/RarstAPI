@@ -2,9 +2,11 @@ package me.rarstman.rarstapi.database.impl;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import com.zaxxer.hikari.pool.HikariPool;
 import me.rarstman.rarstapi.database.DatabaseData;
 import me.rarstman.rarstapi.database.DatabaseProvider;
 import me.rarstman.rarstapi.database.exception.DatabaseInitializeException;
+import org.bukkit.Material;
 
 import java.sql.SQLException;
 
@@ -41,7 +43,13 @@ public class MySQL extends DatabaseProvider {
         hikariConfig.addDataSourceProperty("cacheServerConfiguration", "true");
         hikariConfig.addDataSourceProperty("elideSetAutoCommits", "true");
         hikariConfig.addDataSourceProperty("maintainTimeStats", "false");
-        this.hikariDataSource = new HikariDataSource(hikariConfig);
+
+        try {
+            this.hikariDataSource = new HikariDataSource(hikariConfig);
+        } catch (final HikariPool.PoolInitializationException exception) {
+            this.logger.exception(exception, "Error while trying to initialize HikariPool ('" + this.databaseData.getHost() + "', '" + this.databaseData.getPort() + "', '" + this.databaseData.getUser() + "', " + this.databaseData.getBase() + "'");
+            throw new DatabaseInitializeException("Error while trying to initialize HikariPool ('" + this.databaseData.getHost() + "', '" + this.databaseData.getPort() + "', '" + this.databaseData.getUser() + "', " + this.databaseData.getBase() + "'");
+        }
 
         try {
             this.hikariDataSource.getConnection();

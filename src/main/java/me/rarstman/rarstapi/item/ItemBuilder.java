@@ -148,11 +148,17 @@ public class ItemBuilder {
     }
 
     public ItemBuilder setName(final String name){
+        if(this.itemStack.getType() == Material.AIR) {
+            return this;
+        }
         this.itemMeta.setDisplayName(ColorUtil.color(name));
         return this.updateItemMeta();
     }
 
     public ItemBuilder setLore(final List<String> lore){
+        if(this.itemStack.getType() == Material.AIR) {
+            return this;
+        }
         this.itemMeta.setLore(ColorUtil.color(lore));
         return this.updateItemMeta();
     }
@@ -175,22 +181,34 @@ public class ItemBuilder {
     }
 
     public ItemBuilder addFlags(final ItemFlag... itemFlags) {
+        if(this.itemStack.getType() == Material.AIR) {
+            return this;
+        }
         this.itemMeta.addItemFlags(itemFlags);
         return this.updateItemMeta();
     }
 
     public ItemBuilder unbreakable() {
+        if(this.itemStack.getType() == Material.AIR) {
+            return this;
+        }
         this.itemMeta.setUnbreakable(true);
         return this.updateItemMeta();
     }
 
     public ItemBuilder glowing() {
+        if(this.itemStack.getType() == Material.AIR) {
+            return this;
+        }
         this.itemMeta.addEnchant(Enchantment.DURABILITY, 0, true);
         this.itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         return this.updateItemMeta();
     }
 
     public ItemBuilder addEnchantments(final Map<Enchantment, Integer> enchantments) {
+        if(this.itemStack.getType() == Material.AIR) {
+            return this;
+        }
         enchantments
                 .entrySet()
                 .stream()

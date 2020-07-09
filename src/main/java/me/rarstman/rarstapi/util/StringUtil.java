@@ -30,4 +30,10 @@ public class StringUtil {
                 .collect(Collectors.toList());
     }
 
+    public static boolean containsIgnoreCase(final List<String> list, final String string) {
+        return list
+                .stream()
+                .anyMatch(value -> value.equalsIgnoreCase(string));
+    }
+
 }
